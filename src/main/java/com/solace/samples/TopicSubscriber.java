@@ -40,8 +40,8 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 /**
- * Subscribes to messages published to a topic using JMS 1.1 API over AMQP 1.0.
- * Solace Message Router is used as the message broker.
+ * Subscribes to messages published to a topic using JMS 1.1 API over AMQP 1.0. Solace Message Router is used as the
+ * message broker.
  *
  * This is the Subscriber in the Publish/Subscribe messaging pattern.
  */
@@ -73,7 +73,7 @@ public class TopicSubscriber {
                 // the source for messages: a topic on the message broker
                 Topic source = (Topic) initialContext.lookup(TOPIC_LOOKUP);
 
-                // create session and subscribe to messages from the source.
+                // create session and subscribe to messages from the source
                 try (TopicSession session = connection.createTopicSession(IS_TRANSACTED, ACK_MODE);
                         javax.jms.TopicSubscriber subscriber = session.createSubscriber(source)) {
 
@@ -90,7 +90,7 @@ public class TopicSubscriber {
                     }
                 }
             }
-            
+
             initialContext.close();
         } catch (NamingException ex) {
             LOG.error(ex);

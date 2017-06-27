@@ -26,6 +26,7 @@ package com.solace.samples;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
+import javax.jms.DeliveryMode;
 import javax.jms.ExceptionListener;
 import javax.jms.JMSException;
 import javax.jms.Session;
@@ -39,8 +40,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 /**
- * Publishes a messages to a topic using JMS 1.1 API over AMQP 1.0.
- * Solace Message Router is used as the message broker.
+ * Publishes a messages to a topic using JMS 1.1 API over AMQP 1.0. Solace Message Router is used as the message broker.
  * 
  * This is the Publisher in the Publish/Subscribe messaging pattern.
  */
@@ -69,12 +69,13 @@ public class TopicPublisher {
                 connection.setExceptionListener(new TopicConnectionExceptionListener());
                 connection.start();
 
-                // the target for publishing messages: a topic on the message broker
+                // the target for messages: a topic on the message broker
                 Topic target = (Topic) initialContext.lookup(TOPIC_LOOKUP);
 
                 // create session and publisher
                 try (TopicSession session = connection.createTopicSession(IS_TRANSACTED, ACK_MODE);
                         javax.jms.TopicPublisher publisher = session.createPublisher(target)) {
+                    publisher.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
 
                     // publish one message with string data
                     publisher.publish(session.createTextMessage("Message with String Data"));

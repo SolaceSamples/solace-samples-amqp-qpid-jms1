@@ -46,8 +46,10 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 /**
- * AMQP Container that uses JMS 1.1 API to receive a request message and replies to it. Solace Message Router is used as
- * the message broker.
+ * Receives a request message using JMS 1.1 API over AMQP 1.0 and replies to it. Solace Message Router is used as the
+ * message broker.
+ * 
+ * Two queues are used: one for request and the other for reply. Both queues must exist on the message broker.
  * 
  * This is the Replier in the Request/Reply messaging pattern.
  */
@@ -58,36 +60,37 @@ public class SimpleReplier {
     // connectionfactory.solaceConnectionLookup in file "jndi.properties"
     final String SOLACE_CONNECTION_LOOKUP = "solaceConnectionLookup";
     // queue.queueLookup in file "jndi.properties"
+    // this is the request queue
     final String QUEUE_LOOKUP = "queueLookup";
+    // queue.replyQueueLookup in file "jndi.properties"
+    // this is the reply queue
+    final String REPLY_QUEUE_LOOKUP = "replyQueueLookup";
 
-    // AMQP Session parameters
+    // session parameters
     final int ACK_MODE = Session.AUTO_ACKNOWLEDGE;
     final boolean TRANSACTED = false;
 
     private void run() {
         try {
             // pick up properties from the "jndi.properties" file
-            Context context = new InitialContext(); //
-            QueueConnectionFactory factory = (QueueConnectionFactory) context
+            Context initialContext = new InitialContext(); //
+            QueueConnectionFactory factory = (QueueConnectionFactory) initialContext
                     .lookup(SOLACE_CONNECTION_LOOKUP);
 
-            // establish AMQP Connection that uses the Solace Message Router as a broker
+            // establish connection that uses the Solace Message Router as a message broker
             try (QueueConnection connection = factory.createQueueConnection()) {
                 connection.setExceptionListener(new QueueConnectionExceptionListener());
                 connection.start();
 
-                // the AMQP Source for messages: a queue that already exists on the broker
-                Queue queue = (Queue) context.lookup(QUEUE_LOOKUP);
+                // the source for requests: a queue that already exists on the broker
+                Queue source = (Queue) initialContext.lookup(QUEUE_LOOKUP);
 
-                // Create AMQP Session and AMQP Consumer with an incoming Link to the broker.
-                // Subscribe to messages from the Source and wait for a request to arrive.
-                // The AMQP Consumer is represented by the JMS QueueReceiver.
-                // Also create AMQP Producer (represented by JMS QueueSender) with an outgoing Link
-                // to the broker. This producer will be used to reply to the received requests.
+                // create session and subscribe to requests
+                // create sender that will be used to reply to the received requests
                 try (QueueSession session = connection.createQueueSession(TRANSACTED, ACK_MODE);
-                        QueueReceiver requestConsumer = session.createReceiver(queue);
-                        QueueSender replyProducer = session.createSender(null)) {
-                    replyProducer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
+                        QueueReceiver requestConsumer = session.createReceiver(source);
+                        QueueSender replySender = session.createSender(null)) {
+                    replySender.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
 
                     LOG.info("Waiting for a request...");
                     // the current thread blocks here until a request arrives
@@ -99,20 +102,21 @@ public class SimpleReplier {
                         LOG.warn("Unexpected data type in request: \"{}\"", request.toString());
                     }
 
-                    // create response with string data
-                    TextMessage response = session.createTextMessage(
+                    // prepare reply with received string data
+                    TextMessage reply = session.createTextMessage(
                             String.format("Reply to \"%s\"", ((TextMessage) request).getText()));
-                    response.setJMSCorrelationID(request.getJMSCorrelationID());
-                    replyProducer.send(request.getJMSReplyTo(), response);
-                    LOG.info("AMQP Request Message replied successfully.");
+                    reply.setJMSCorrelationID(request.getJMSCorrelationID());
+                    // send the reply
+                    replySender.send(request.getJMSReplyTo(), reply);
+                    LOG.info("Request Message replied successfully.");
                     TimeUnit.SECONDS.sleep(3);
                 } catch (InterruptedException ex) {
                     LOG.error(ex);
                 }
             }
-        } catch (
 
-        NamingException ex) {
+            initialContext.close();
+        } catch (NamingException ex) {
             LOG.error(ex);
         } catch (JMSException ex) {
             LOG.error(ex);
