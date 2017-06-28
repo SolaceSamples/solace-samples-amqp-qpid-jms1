@@ -74,6 +74,8 @@ java.naming.factory.initial = org.apache.qpid.jms.jndi.JmsInitialContextFactory
 connectionfactory.solaceConnectionLookup = amqp://192.168.123.45:8555
 ~~~
 
+Because the publish/subscribe pattern uses the publish-and-subscribe messaging model, the specialized `TopicConnectionFactory` and `TopicConnection` are used.
+
 *TopicPublisher.java/TopicSubscriber.java*
 ~~~java
 Context initialContext = new InitialContext();
@@ -95,7 +97,7 @@ try (TopicSession session = connection.createTopicSession(false, Session.AUTO_AC
 
 At this point the application is connected to the Solace Message Router and ready to publish messages.
 
-## Publishing a message
+## Publishing message
 
 In order to publish a message to a topic a JMS topic publisher needs to be created. We assign its delivery mode to “non-persistent” for better performance.
 
@@ -123,7 +125,7 @@ publisher.publish(session.createTextMessage("Message with String Data"));
 
 Now if you execute the `TopicPublisher.java` program, it will successfully publish a message. But of course we need another application to receive that message.
 
-## Receiving a message
+## Receiving message
 
 In order to receive a message from a topic a JMS topic subscriber needs to be created.
 
@@ -178,7 +180,7 @@ java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencies.
 
 ## Sample Output
 
-First start the `TopicSubscriber.exe` so that it is up and waiting for published messages. Of course you can start multiple instances of this application, all of them will receive a published message at once.
+First start the `TopicSubscriber` so that it is up and waiting for published messages. Of course you can start multiple instances of this application, all of them will receive a published message at once.
 
 ~~~sh
 $ java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencies.jar  com.solace.samples.TopicSubscriber
@@ -187,7 +189,7 @@ $ java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencie
 2017-06-27T17:23:25,137 INFO samples.TopicSubscriber - Waiting for a message...
 ~~~
 
-Then you can start the `TopicPublisher.exe` to publish a message.
+Then you can start the `TopicPublisher` to publish a message.
 ~~~sh
 $  java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencies.jar com.solace.samples.TopicPublisher
 2017-06-27T17:27:34,339 INFO sasl.SaslMechanismFinder - Best match for SASL auth was: SASL-ANONYMOUS
@@ -195,7 +197,7 @@ $  java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependenci
 2017-06-27T17:27:34,401 INFO samples.TopicPublisher - Message published successfully.
 ~~~
 
-Notice how the published message is received by the the `TopicSubscriber.exe`.
+Notice how the published message is received by the the `TopicSubscriber`.
 
 ~~~sh
 ...

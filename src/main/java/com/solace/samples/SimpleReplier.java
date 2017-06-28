@@ -101,11 +101,12 @@ public class SimpleReplier {
                         TextMessage replyMessage = session.createTextMessage(
                                 String.format("Reply to \"%s\"", requestTextMessage.getText()));
                         replyMessage.setJMSCorrelationID(request.getJMSCorrelationID());
-                        // workaround as the Apache Qpid JMS API sets JMSReplyTo to a non-temporary queue 
+                        // workaround as the Apache Qpid JMS API sets JMSReplyTo to a non-temporary queue
                         // should be: JmsTemporaryQueue replyTo = (JmsTemporaryQueue) request.getJMSReplyTo();
-                        Destination replyTo = new JmsTemporaryQueue(((Queue) request.getJMSReplyTo()).getQueueName());
+                        Destination replyDestination = new JmsTemporaryQueue(
+                                ((Queue) request.getJMSReplyTo()).getQueueName());
                         // send the reply
-                        replySender.send(replyTo, replyMessage);
+                        replySender.send(replyDestination, replyMessage);
                         LOG.info("Request Message replied successfully.");
                     } else {
                         LOG.warn("Unexpected data type in request: \"{}\", nothing replied.", request.toString());
