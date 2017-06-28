@@ -35,6 +35,7 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.Session;
+import javax.jms.TemporaryQueue;
 import javax.jms.TextMessage;
 import javax.jms.Queue;
 import javax.jms.QueueConnectionFactory;
@@ -95,9 +96,9 @@ public class SimpleRequestor implements MessageListener {
                         QueueSender requestSender = session.createSender(target)) {
                     requestSender.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
 
-                    // the source for replies: a queue that already exists on the message broker
-                    Queue replyQueue = (Queue) initialContext.lookup("replyQueueLookup");
-
+                    // the source for replies: a temporary queue
+                    TemporaryQueue replyQueue = session.createTemporaryQueue();
+                    
                     // reuse the session and create message receiver
                     try (QueueReceiver replyReceiver = session.createReceiver(replyQueue)) {
                         replyReceiver.setMessageListener(this);

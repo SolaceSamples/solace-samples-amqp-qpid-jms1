@@ -24,11 +24,13 @@
 package com.solace.samples;
 
 import org.apache.logging.log4j.Logger;
+import org.apache.qpid.jms.JmsTemporaryQueue;
 import org.apache.logging.log4j.LogManager;
 
 import java.util.concurrent.TimeUnit;
 
 import javax.jms.DeliveryMode;
+import javax.jms.Destination;
 import javax.jms.ExceptionListener;
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -62,9 +64,6 @@ public class SimpleReplier {
     // queue.queueLookup in file "jndi.properties"
     // this is the request queue
     final String QUEUE_LOOKUP = "queueLookup";
-    // queue.replyQueueLookup in file "jndi.properties"
-    // this is the reply queue
-    final String REPLY_QUEUE_LOOKUP = "replyQueueLookup";
 
     // session parameters
     final int ACK_MODE = Session.AUTO_ACKNOWLEDGE;
@@ -96,19 +95,21 @@ public class SimpleReplier {
                     // the current thread blocks here until a request arrives
                     Message request = requestConsumer.receive();
                     if (request instanceof TextMessage) {
-                        LOG.info("Received AMQP request with string data: \"{}\"",
-                                ((TextMessage) request).getText());
+                        TextMessage requestTextMessage = (TextMessage) request;
+                        LOG.info("Received AMQP request with string data: \"{}\"", requestTextMessage.getText());
+                        // prepare reply with received string data
+                        TextMessage reply = session.createTextMessage(
+                                String.format("Reply to \"%s\"", requestTextMessage.getText()));
+                        reply.setJMSCorrelationID(request.getJMSCorrelationID());
+                        // workaround as the Apache Qpid JMS API sets JMSReplyTo to a non-temporary queue 
+                        // should be: JmsTemporaryQueue replyTo = (JmsTemporaryQueue) request.getJMSReplyTo();
+                        Destination replyTo = new JmsTemporaryQueue(((Queue) request.getJMSReplyTo()).getQueueName());
+                        // send the reply
+                        replySender.send(replyTo, reply);
+                        LOG.info("Request Message replied successfully.");
                     } else {
-                        LOG.warn("Unexpected data type in request: \"{}\"", request.toString());
+                        LOG.warn("Unexpected data type in request: \"{}\", nothing replied.", request.toString());
                     }
-
-                    // prepare reply with received string data
-                    TextMessage reply = session.createTextMessage(
-                            String.format("Reply to \"%s\"", ((TextMessage) request).getText()));
-                    reply.setJMSCorrelationID(request.getJMSCorrelationID());
-                    // send the reply
-                    replySender.send(request.getJMSReplyTo(), reply);
-                    LOG.info("Request Message replied successfully.");
                     TimeUnit.SECONDS.sleep(3);
                 } catch (InterruptedException ex) {
                     LOG.error(ex);
