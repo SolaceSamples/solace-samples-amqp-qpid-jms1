@@ -148,7 +148,7 @@ This is how we receive messages published to the subscribed topic.
 Message message = subscriber.receive();
 ~~~
 
-If you execute the `TopicSubscriber.java` program, it will block at the `subscriber.receive()` call util a message is received. Now if you execute the `TopicPublisher.java` that publishes a message, the `TopicSubscriber.java` program will resume and print out the received message.
+If you execute the `TopicSubscriber.java` program, it will block at the `subscriber.receive()` call until a message is received. Now if you execute the `TopicPublisher.java` that publishes a message, the `TopicSubscriber.java` program will resume and print out the received message.
 
 ## Summarizing
 
@@ -178,7 +178,7 @@ java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencies.
 
 ## Sample Output
 
-First start the `TopicSubscriber.exe` so that it is up and waiting for published messages.
+First start the `TopicSubscriber.exe` so that it is up and waiting for published messages. Of course you can start multiple instances of this application, all of them will receive a published message at once.
 
 ~~~sh
 $ java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencies.jar  com.solace.samples.TopicSubscriber

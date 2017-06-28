@@ -92,20 +92,20 @@ public class SimpleReplier {
                     replySender.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
 
                     LOG.info("Waiting for a request...");
-                    // the current thread blocks here until a request arrives
+                    // the current thread blocks at the next statement until the request arrives
                     Message request = requestConsumer.receive();
                     if (request instanceof TextMessage) {
                         TextMessage requestTextMessage = (TextMessage) request;
                         LOG.info("Received AMQP request with string data: \"{}\"", requestTextMessage.getText());
                         // prepare reply with received string data
-                        TextMessage reply = session.createTextMessage(
+                        TextMessage replyMessage = session.createTextMessage(
                                 String.format("Reply to \"%s\"", requestTextMessage.getText()));
-                        reply.setJMSCorrelationID(request.getJMSCorrelationID());
+                        replyMessage.setJMSCorrelationID(request.getJMSCorrelationID());
                         // workaround as the Apache Qpid JMS API sets JMSReplyTo to a non-temporary queue 
                         // should be: JmsTemporaryQueue replyTo = (JmsTemporaryQueue) request.getJMSReplyTo();
                         Destination replyTo = new JmsTemporaryQueue(((Queue) request.getJMSReplyTo()).getQueueName());
                         // send the reply
-                        replySender.send(replyTo, reply);
+                        replySender.send(replyTo, replyMessage);
                         LOG.info("Request Message replied successfully.");
                     } else {
                         LOG.warn("Unexpected data type in request: \"{}\", nothing replied.", request.toString());

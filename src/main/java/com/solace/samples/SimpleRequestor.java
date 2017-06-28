@@ -65,9 +65,6 @@ public class SimpleRequestor implements MessageListener {
     // queue.queueLookup in file "jndi.properties"
     // this is the request queue
     final String QUEUE_LOOKUP = "queueLookup";
-    // queue.replyQueueLookup in file "jndi.properties"
-    // this is the reply queue
-    final String REPLY_QUEUE_LOOKUP = "replyQueueLookup";
 
     // session parameters
     final int ACK_MODE = Session.AUTO_ACKNOWLEDGE;
