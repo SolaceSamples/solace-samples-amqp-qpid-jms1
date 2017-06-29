@@ -73,8 +73,7 @@ public class SimpleReplier {
         try {
             // pick up properties from the "jndi.properties" file
             Context initialContext = new InitialContext(); //
-            QueueConnectionFactory factory = (QueueConnectionFactory) initialContext
-                    .lookup(SOLACE_CONNECTION_LOOKUP);
+            QueueConnectionFactory factory = (QueueConnectionFactory) initialContext.lookup(SOLACE_CONNECTION_LOOKUP);
 
             // establish connection that uses the Solace Message Router as a message broker
             try (QueueConnection connection = factory.createQueueConnection()) {
@@ -95,8 +94,9 @@ public class SimpleReplier {
                     // the current thread blocks at the next statement until the request arrives
                     Message request = requestConsumer.receive();
                     if (request instanceof TextMessage) {
+                        // process received request
                         TextMessage requestTextMessage = (TextMessage) request;
-                        LOG.info("Received AMQP request with string data: \"{}\"", requestTextMessage.getText());
+                        LOG.info("Received request with string data: \"{}\"", requestTextMessage.getText());
                         // prepare reply with received string data
                         TextMessage replyMessage = session.createTextMessage(
                                 String.format("Reply to \"%s\"", requestTextMessage.getText()));
@@ -108,19 +108,19 @@ public class SimpleReplier {
                         // send the reply
                         replySender.send(replyDestination, replyMessage);
                         LOG.info("Request Message replied successfully.");
+                        TimeUnit.SECONDS.sleep(3);
                     } else {
                         LOG.warn("Unexpected data type in request: \"{}\", nothing replied.", request.toString());
                     }
-                    TimeUnit.SECONDS.sleep(3);
-                } catch (InterruptedException ex) {
-                    LOG.error(ex);
                 }
+            } catch (JMSException ex) {
+                LOG.error(ex);
+            } catch (InterruptedException ex) {
+                LOG.error(ex);
             }
 
             initialContext.close();
         } catch (NamingException ex) {
-            LOG.error(ex);
-        } catch (JMSException ex) {
             LOG.error(ex);
         }
     }

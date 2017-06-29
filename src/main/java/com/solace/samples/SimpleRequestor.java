@@ -77,8 +77,7 @@ public class SimpleRequestor implements MessageListener {
         try {
             // pick up properties from the "jndi.properties" file
             Context initialContext = new InitialContext(); //
-            QueueConnectionFactory factory = (QueueConnectionFactory) initialContext
-                    .lookup(SOLACE_CONNECTION_LOOKUP);
+            QueueConnectionFactory factory = (QueueConnectionFactory) initialContext.lookup(SOLACE_CONNECTION_LOOKUP);
 
             // establish connection that uses the Solace Message Router as a message broker
             try (QueueConnection connection = factory.createQueueConnection()) {
@@ -110,16 +109,16 @@ public class SimpleRequestor implements MessageListener {
                         LOG.info("Request message sent successfully, waiting for a reply...");
                         // the current thread blocks at the next statement until the replyLatch is released
                         replyLatch.acquire();
-                    } catch (InterruptedException ex) {
-                        LOG.error(ex);
                     }
                 }
+            } catch (JMSException ex) {
+                LOG.error(ex);
+            } catch (InterruptedException ex) {
+                LOG.error(ex);
             }
 
             initialContext.close();
         } catch (NamingException ex) {
-            LOG.error(ex);
-        } catch (JMSException ex) {
             LOG.error(ex);
         }
     }

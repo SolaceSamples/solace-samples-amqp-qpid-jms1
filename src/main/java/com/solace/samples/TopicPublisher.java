@@ -61,8 +61,7 @@ public class TopicPublisher {
         try {
             // pick up properties from the "jndi.properties" file
             Context initialContext = new InitialContext();
-            TopicConnectionFactory factory = (TopicConnectionFactory) initialContext
-                    .lookup(SOLACE_CONNECTION_LOOKUP);
+            TopicConnectionFactory factory = (TopicConnectionFactory) initialContext.lookup(SOLACE_CONNECTION_LOOKUP);
 
             // establish connection that uses the Solace Message Router as a message broker
             try (TopicConnection connection = factory.createTopicConnection()) {
@@ -81,12 +80,12 @@ public class TopicPublisher {
                     publisher.publish(session.createTextMessage("Message with String Data"));
                     LOG.info("Message published successfully.");
                 }
+            } catch (JMSException ex) {
+                LOG.error(ex);
             }
 
             initialContext.close();
         } catch (NamingException ex) {
-            LOG.error(ex);
-        } catch (JMSException ex) {
             LOG.error(ex);
         }
     }

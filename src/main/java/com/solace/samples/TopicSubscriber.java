@@ -62,8 +62,7 @@ public class TopicSubscriber {
         try {
             // pick up properties from the "jndi.properties" file
             Context initialContext = new InitialContext();
-            TopicConnectionFactory factory = (TopicConnectionFactory) initialContext
-                    .lookup(SOLACE_CONNECTION_LOOKUP);
+            TopicConnectionFactory factory = (TopicConnectionFactory) initialContext.lookup(SOLACE_CONNECTION_LOOKUP);
 
             // establish connection that uses the Solace Message Router as a message broker
             try (TopicConnection connection = factory.createTopicConnection()) {
@@ -89,12 +88,12 @@ public class TopicSubscriber {
                         LOG.warn("Unexpected data type in message: \"{}\"", message.toString());
                     }
                 }
+            } catch (JMSException ex) {
+                LOG.error(ex);
             }
 
             initialContext.close();
         } catch (NamingException ex) {
-            LOG.error(ex);
-        } catch (JMSException ex) {
             LOG.error(ex);
         }
     }
