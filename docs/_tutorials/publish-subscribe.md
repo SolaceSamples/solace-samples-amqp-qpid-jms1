@@ -5,7 +5,7 @@ summary: Demonstrates the publish/subscribe message exchange pattern
 icon: publish-subscribe-icon.png
 ---
 
-This tutorial will demonstrate to you to how to connect a JMS 1.1 API client to a Solace Message Router using AMQP, add a topic subscription and publish a message matching this topic subscription. This the publish/subscribe message exchange pattern as illustrated here:
+This tutorial will show you to how to connect a JMS 1.1 API client to a Solace Message Router using AMQP, add a topic subscription and publish a message matching this topic subscription. This is the publish/subscribe message exchange pattern as illustrated here:
 
 ![Sample Image Text]({{ site.baseurl }}/images/publish-subscribe-icon.png)
 
@@ -13,7 +13,7 @@ This tutorial will demonstrate to you to how to connect a JMS 1.1 API client to 
 
 This tutorial assumes the following:
 
-* You are familiar with Solace [core concepts]({{ site.docs-core-concepts }}){:target="_top"}.
+* You are familiar with Solace messaging [core concepts]({{ site.docs-core-concepts }}){:target="_top"}.
 * You have access to a running Solace message router with the following configuration:
     * Enabled “default” message VPN
     * Enabled “default” client username
@@ -29,7 +29,7 @@ The goal of this tutorial is to demonstrate how to use JMS 1.1 API over AMQP usi
 
 ## Solace message router properties
 
-In order to send or receive messages to a Solace message router, you need to know a few details of how to connect to the Solace message router. Specifically you need to know the following:
+In order to send or receive messages to a Solace message router, you need to know a few details about how to connect to the Solace message router. Specifically, you need to know the following:
 
 <table>
 <tbody>
@@ -41,7 +41,7 @@ In order to send or receive messages to a Solace message router, you need to kno
 <tr>
 <td>Host</td>
 <td>String of the form <code>DNS name</code> or <code>IP:Port</code></td>
-<td>This is the address client’s use when connecting to the Solace Message Router to send and receive messages. For a Solace VMR this there is only a single interface so the IP is the same as the management IP address. For Solace message router appliances this is the host address of the message-backbone. The port number must match the port number for the plain text AMQP service on the router.</td>
+<td>This is the address clients use when connecting to the Solace Message Router to send and receive messages. For a Solace VMR this there is only a single interface so the IP is the same as the management IP address. For Solace message router appliances this is the host address of the message-backbone. The port number must match the port number for the plain text AMQP service on the router.</td>
 </tr>
 <tr>
 <td>Message VPN</td>
@@ -58,15 +58,15 @@ In order to send or receive messages to a Solace message router, you need to kno
 
 ## Obtaining JMS 1.1 API
 
-This tutorial depends on you having the [Apache Qpid JMS client](https://qpid.apache.org/components/jms/index.html) downloaded and installed for your project, and the instructions in this tutorial assume you successfully done it. If your environment differs then adjust the build instructions appropriately.
+This tutorial assumes you have downloaded and successfully installed the [Apache Qpid JMS client](https://qpid.apache.org/components/jms/index.html). If your environment differs from the example, then adjust the build instructions appropriately.
 
-The easiest way to do it through Maven. See the project's *pom.xml* file for details.
+The easiest way to install the JMS 1.1 API is through Maven. See the project's *pom.xml* file for details.
 
 ## Connecting to the Solace Message Router
 
 In order to send or receive messages, an application must start a JMS connection.
 
-There is only one required parameter for establishing the JMS connection: the Solace Message Router host name with the AMQP service port number. The value of this parameter is loaded in the examples by the `javax.naming.InitialContext.InitialContext()` from the *jndi.properties* project's file, but of course it could be assigned directly in the application by assigning the corresponding environment variable.
+There is only one required parameter for establishing the JMS connection: the Solace Message Router host name with the AMQP service port number. The value of this parameter is loaded in the examples by the `javax.naming.InitialContext.InitialContext()` from the *jndi.properties* project's file, but it could be assigned directly in the application by assigning the corresponding environment variable.
 
 *jndi.properties*
 ~~~
@@ -87,7 +87,7 @@ try (TopicConnection connection = factory.createTopicConnection()) {
 ...
 ~~~
 
-The target for publishing message will be a JMS Topic, therefore a session of the `javax.jms.TopicSession` type needs to be created. The session will be non-transacted with the acknowledge mode that automatically acknowledges a client's receipt of a message.
+The target for publishing messages will be a JMS Topic, therefore a session of the `javax.jms.TopicSession` type needs to be created. The session will be non-transacted using the acknowledge mode that automatically acknowledges a client's receipt of a message.
 
 *TopicPublisher.java/TopicSubscriber.java*
 ~~~java
@@ -97,7 +97,7 @@ try (TopicSession session = connection.createTopicSession(false, Session.AUTO_AC
 
 At this point the application is connected to the Solace Message Router and ready to publish messages.
 
-## Publishing message
+## Publishing messages
 
 In order to publish a message to a topic a JMS topic publisher needs to be created. We assign its delivery mode to “non-persistent” for better performance.
 
@@ -123,7 +123,7 @@ Now we can publish the message.
 publisher.publish(session.createTextMessage("Message with String Data"));
 ~~~
 
-Now if you execute the `TopicPublisher.java` program, it will successfully publish a message. But of course we need another application to receive that message.
+Now if you execute the `TopicPublisher.java` program it will successfully publish a message, but another application is required to receive the message.
 
 ## Receiving message
 
@@ -171,7 +171,7 @@ To build a jar file that includes all dependencies execute the following:
 mvn assembly:single
 ~~~
 
-Then the examples can be executes as:
+Then the examples can be executed as:
 
 ~~~sh
 java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencies.jar  com.solace.samples.TopicSubscriber
@@ -180,7 +180,7 @@ java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencies.
 
 ## Sample Output
 
-First start the `TopicSubscriber` so that it is up and waiting for published messages. Of course you can start multiple instances of this application, all of them will receive a published message at once.
+First start the `TopicSubscriber` so that it is up and waiting for published messages. You can start multiple instances of this application, and all of them will receive published messages.
 
 ~~~sh
 $ java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencies.jar  com.solace.samples.TopicSubscriber
