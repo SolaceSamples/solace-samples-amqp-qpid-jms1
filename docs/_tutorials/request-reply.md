@@ -162,7 +162,7 @@ requestSender.send(request);
 
 In order to receive a request from a queue a JMS queue receiver needs to be created.
 
-The name of the queue is loaded by the `javax.naming.InitialContext.InitialContext()` from the *jndi.properties* project's file and its name is the same as the one to which we send requests.
+The name of the queue is loaded by the `javax.naming.InitialContext.InitialContext()` from the *jndi.properties* project's file, and it is the same as the one to which we send requests.
 
 *jndi.properties*
 ~~~
@@ -251,7 +251,8 @@ java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencies.
 First start the `SimpleReplier` so that it is up and waiting for requests.
 
 ~~~sh
-$  java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencies.jar com.solace.samples.SimpleReplier 2017-06-28T17:04:47,941 INFO sasl.SaslMechanismFinder - Best match for SASL auth was: SASL-ANONYMOUS
+$ java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencies.jar com.solace.samples.SimpleReplier
+2017-06-28T17:04:47,941 INFO sasl.SaslMechanismFinder - Best match for SASL auth was: SASL-ANONYMOUS
 2017-06-28T17:04:47,970 INFO jms.JmsConnection - Connection ID:a3c65ee4-4f12-4ab9-a8d8-d2b2252e93ee:1 connected to remote Broker: amqp://192.168.123.45:8555
 2017-06-28T17:04:48,015 INFO samples.SimpleReplier - Waiting for a request...
 ~~~
