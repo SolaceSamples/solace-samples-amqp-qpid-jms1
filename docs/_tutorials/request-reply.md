@@ -87,7 +87,7 @@ try (QueueConnection connection = factory.createQueueConnection()) {
 ...
 ~~~
 
-The target for  messages will be a JMS Queue, therefore a session of the `javax.jms.QueueSession` type needs to be created. The session will be non-transacted with the acknowledge mode that automatically acknowledges a client's receipt of a message.
+The target for  messages will be a JMS Queue, therefore a session of the `javax.jms.QueueSession` type needs to be created. The session will be non-transacted using the acknowledge mode that automatically acknowledges a client's receipt of a message.
 
 *SimpleRequestor.java/SimpleReplier.java*
 ~~~java
@@ -97,11 +97,11 @@ try (QueueSession session = connection.createQueueSession(false, Session.AUTO_AC
 
 At this point the application is connected to the Solace Message Router and ready to send and receive request and reply messages.
 
-## Sending request
+## Sending a request
 
 In order to send a request to a queue a JMS queue sender needs to be created. We assign its delivery mode to “non-persistent” for better performance.
 
-The name of the queue is loaded by the `javax.naming.InitialContext.InitialContext()` from the *jndi.properties* project's file. It must exists on the Solace Message Router as a `durable queue`.
+The name of the queue is loaded by the `javax.naming.InitialContext.InitialContext()` from the *jndi.properties* project's file. It must exist on the Solace Message Router as a `durable queue`.
 
 *jndi.properties*
 ~~~
@@ -116,7 +116,7 @@ try (QueueSender requestSender = session.createSender(target)) {
 ...
 ~~~
 
-Also it is necessary to allocate a temporary queue for receiving the reply.
+Also, it is necessary to allocate a temporary queue for receiving the reply.
 
 *SimpleRequestor.java*
 ~~~java
@@ -158,11 +158,11 @@ Now send the request:
 requestSender.send(request);
 ~~~
 
-## Receiving request
+## Receiving a request
 
 In order to receive a request from a queue a JMS queue receiver needs to be created.
 
-The name of the queue is loaded by the `javax.naming.InitialContext.InitialContext()` from the *jndi.properties* project's file and its name is the same as the one we send requests to.
+The name of the queue is loaded by the `javax.naming.InitialContext.InitialContext()` from the *jndi.properties* project's file and its name is the same as the one to which we send requests.
 
 *jndi.properties*
 ~~~
@@ -183,7 +183,7 @@ This is how we receive requests sent to the queue.
 Message request = requestConsumer.receive();
 ~~~
 
-## Replying to request
+## Replying to a request
 
 To reply to a received request a JMS queue sender needs to be created. We assign its delivery mode to “non-persistent” for better performance.
 
@@ -210,7 +210,7 @@ if (request instanceof TextMessage) {
 
 Now we can send the reply message.
 
-We must send it to the temporary queue that was created by the requestor for it. Because of the way the Apache Qpid JMS implemented it, we need create an instance of the the `org.apache.qpid.jms.JmsTemporaryQueue` class for the reply destination and assign it name from the request `JMSReplyTo` property.
+We must send it to the temporary queue that was created by the requestor. We need to create an instance of the `org.apache.qpid.jms.JmsTemporaryQueue` class for the reply destination and assign it a name from the request `JMSReplyTo` property because of the Apache Qpid JMS implementation.
 
 *SimpleReplier.java*
 ~~~java
@@ -239,7 +239,7 @@ To build a jar file that includes all dependencies execute the following:
 mvn assembly:single
 ~~~
 
-Then the examples can be executes as:
+Then the examples can be executed as:
 
 ~~~sh
 java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencies.jar  com.solace.samples.SimpleReplier
@@ -265,7 +265,7 @@ $ java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencie
 2017-06-28T17:05:35,771 INFO samples.SimpleRequestor - Received reply: "Reply to "Request with String Data""
 ~~~
 
-Notice how the request is received by the the `SimpleReplier` and replied to.
+Notice how the request is received by the `SimpleReplier` and replied to.
 
 ~~~sh
 ...
@@ -274,6 +274,6 @@ Notice how the request is received by the the `SimpleReplier` and replied to.
 2017-06-28T17:05:35,763 INFO samples.SimpleReplier - Request Message replied successfully.
 ~~~
 
-With that now you know how to use JMS 1.1 API over AMQP using the Solace Message Router to implement the request/reply message exchange pattern.
+Now you know how to use JMS 1.1 API over AMQP using the Solace Message Router to implement the request/reply message exchange pattern.
 
 If you have any issues sending and receiving request or reply, check the [Solace community]({{ site.links-community }}){:target="_top"} for answers to common issues seen.
