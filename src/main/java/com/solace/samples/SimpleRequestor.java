@@ -52,7 +52,7 @@ import javax.naming.NamingException;
  * Sends a request message using JMS 1.1 API over AMQP 1.0 and receives a reply to it. Solace Message Router is used as
  * the message broker.
  * 
- * Two queues are used: one for request and the other for reply. Both queues must exist on the message broker.
+ * The queues used for requests must exist on the message broker.
  * 
  * This is the Requestor in the Request/Reply messaging pattern.
  */
@@ -96,7 +96,7 @@ public class SimpleRequestor implements MessageListener {
                     // the source for replies: a temporary queue
                     TemporaryQueue replyQueue = session.createTemporaryQueue();
                     
-                    // reuse the session and create message receiver
+                    // reuse the session and create receiver for reply messages
                     try (QueueReceiver replyReceiver = session.createReceiver(replyQueue)) {
                         replyReceiver.setMessageListener(this);
 

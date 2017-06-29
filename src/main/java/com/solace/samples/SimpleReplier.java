@@ -18,7 +18,7 @@
  */
 
 /**
- *  Solace AMQP JMS 1.1 Samples: SimpleReplier
+ *  Solace AMQP JMS 1.1 Examples: SimpleReplier
  */
 
 package com.solace.samples;
@@ -51,7 +51,7 @@ import javax.naming.NamingException;
  * Receives a request message using JMS 1.1 API over AMQP 1.0 and replies to it. Solace Message Router is used as the
  * message broker.
  * 
- * Two queues are used: one for request and the other for reply. Both queues must exist on the message broker.
+ * The queues used for requests must exist on the message broker.
  * 
  * This is the Replier in the Request/Reply messaging pattern.
  */

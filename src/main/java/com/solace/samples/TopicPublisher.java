@@ -18,7 +18,7 @@
  */
 
 /**
- *  Solace AMQP JMS 1.1 Samples: TopicPublisher
+ *  Solace AMQP JMS 1.1 Examples: TopicPublisher
  */
 
 package com.solace.samples;

@@ -252,7 +252,7 @@ First start the `SimpleReplier` so that it is up and waiting for requests.
 
 ~~~sh
 $  java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencies.jar com.solace.samples.SimpleReplier 2017-06-28T17:04:47,941 INFO sasl.SaslMechanismFinder - Best match for SASL auth was: SASL-ANONYMOUS
-2017-06-28T17:04:47,970 INFO jms.JmsConnection - Connection ID:a3c65ee4-4f12-4ab9-a8d8-d2b2252e93ee:1 connected to remote Broker: amqp://192.168.133.16:8555
+2017-06-28T17:04:47,970 INFO jms.JmsConnection - Connection ID:a3c65ee4-4f12-4ab9-a8d8-d2b2252e93ee:1 connected to remote Broker: amqp://192.168.123.45:8555
 2017-06-28T17:04:48,015 INFO samples.SimpleReplier - Waiting for a request...
 ~~~
 
@@ -260,7 +260,7 @@ Then you can start the `SimpleRequestor` to send the request and receive the rep
 ~~~sh
 $ java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencies.jar com.solace.samples.SimpleRequestor
 2017-06-28T17:05:35,636 INFO sasl.SaslMechanismFinder - Best match for SASL auth was: SASL-ANONYMOUS
-2017-06-28T17:05:35,663 INFO jms.JmsConnection - Connection ID:cf6970f3-6188-421b-9d93-9ac89f639d74:1 connected to remote Broker: amqp://192.168.133.16:8555
+2017-06-28T17:05:35,663 INFO jms.JmsConnection - Connection ID:cf6970f3-6188-421b-9d93-9ac89f639d74:1 connected to remote Broker: amqp://192.168.123.45:8555
 2017-06-28T17:05:35,743 INFO samples.SimpleRequestor - Request message sent successfully, waiting for a reply...
 2017-06-28T17:05:35,771 INFO samples.SimpleRequestor - Received reply: "Reply to "Request with String Data""
 ~~~

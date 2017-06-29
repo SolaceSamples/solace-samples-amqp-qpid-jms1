@@ -185,7 +185,7 @@ First start the `TopicSubscriber` so that it is up and waiting for published mes
 ~~~sh
 $ java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencies.jar  com.solace.samples.TopicSubscriber
 2017-06-27T17:23:25,074 INFO sasl.SaslMechanismFinder - Best match for SASL auth was: SASL-ANONYMOUS
-2017-06-27T17:23:25,107 INFO jms.JmsConnection - Connection ID:a76e8496-eee3-4a5c-a908-eac0e4789dc2:1 connected to remote Broker: amqp://192.168.133.16:8555
+2017-06-27T17:23:25,107 INFO jms.JmsConnection - Connection ID:a76e8496-eee3-4a5c-a908-eac0e4789dc2:1 connected to remote Broker: amqp://192.168.123.45:8555
 2017-06-27T17:23:25,137 INFO samples.TopicSubscriber - Waiting for a message...
 ~~~
 
@@ -193,7 +193,7 @@ Then you can start the `TopicPublisher` to publish a message.
 ~~~sh
 $  java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencies.jar com.solace.samples.TopicPublisher
 2017-06-27T17:27:34,339 INFO sasl.SaslMechanismFinder - Best match for SASL auth was: SASL-ANONYMOUS
-2017-06-27T17:27:34,364 INFO jms.JmsConnection - Connection ID:254fe96f-bf46-4d96-a4f1-74a25981785e:1 connected to remote Broker: amqp://192.168.133.16:8555
+2017-06-27T17:27:34,364 INFO jms.JmsConnection - Connection ID:254fe96f-bf46-4d96-a4f1-74a25981785e:1 connected to remote Broker: amqp://192.168.123.45:8555
 2017-06-27T17:27:34,401 INFO samples.TopicPublisher - Message published successfully.
 ~~~
 
