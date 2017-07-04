@@ -105,7 +105,7 @@ The name of the queue is loaded by the `javax.naming.InitialContext.InitialConte
 
 *jndi.properties*
 ~~~
-queue.queueLookup = amqp.tutorial.queue
+queue.queueLookup = amqp/tutorial/queue
 ~~~
 
 *SimpleRequestor.java*
@@ -166,7 +166,7 @@ The name of the queue is loaded by the `javax.naming.InitialContext.InitialConte
 
 *jndi.properties*
 ~~~
-queue.queueLookup = amqp.tutorial.queue
+queue.queueLookup = amqp/tutorial/queue
 ~~~
 
 *SimpleReplier.java*

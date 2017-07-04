@@ -105,7 +105,7 @@ The name of the topic is loaded by the `javax.naming.InitialContext.InitialConte
 
 *jndi.properties*
 ~~~
-topic.topicLookup = amqp.tutorial.topic
+topic.topicLookup = amqp/tutorial/topic
 ~~~
 
 *TopicPublisher.java*
@@ -133,7 +133,7 @@ The name of the topic is loaded by the `javax.naming.InitialContext.InitialConte
 
 *jndi.properties*
 ~~~
-topic.topicLookup = amqp.tutorial.topic
+topic.topicLookup = amqp/tutorial/topic
 ~~~
 
 *TopicSubscriber.java*
