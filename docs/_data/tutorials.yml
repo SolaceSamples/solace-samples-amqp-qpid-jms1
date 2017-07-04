@@ -1,4 +1,5 @@
 - title: AMQP JMS 1.1 Tutorials
   tutorials:
   - publish-subscribe
+  - persistence-with-queues
   - request-reply

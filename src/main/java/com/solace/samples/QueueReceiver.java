@@ -77,11 +77,11 @@ public class QueueReceiver {
                 try (QueueSession session = connection.createQueueSession(TRANSACTED, ACK_MODE);
                         javax.jms.QueueReceiver messageReceiver = session.createReceiver(source)) {
 
-                    LOG.info("Waiting for a request...");
+                    LOG.info("Waiting for a persistent message...");
                     // the current thread blocks at the next statement until the message arrives
                     Message message = messageReceiver.receive();
                     if (message instanceof TextMessage) {
-                        // process received request
+                        // process received message
                         TextMessage textMessage = (TextMessage) message;
                         LOG.info("Received message with string data: \"{}\"", textMessage.getText());
                     } else {
