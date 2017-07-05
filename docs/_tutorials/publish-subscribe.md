@@ -13,7 +13,7 @@ This tutorial is available in [GitHub]({{ site.repository }}){:target="_blank"} 
 
 At the end, this tutorial walks through downloading and running the sample from source.
 
-This tutorial focuses on using a non-Solace JMS API. For using the Solace JMS API see [Solace Getting Started JMS Tutorials]({{ site.links-get-started-jms }}){:target="_blank"}.
+This tutorial focuses on using a non-Solace JMS API implementation. For using the Solace JMS API see [Solace Getting Started JMS Tutorials]({{ site.links-get-started-jms }}){:target="_blank"}.
 
 ## Assumptions
 
@@ -121,7 +121,7 @@ In order to publish a message to a topic a JMS topic publisher (a specialization
 
 ![]({{ site.baseurl }}/images/publish-subscribe-details-2.png)
 
-We assign its delivery mode to “non-persistent” for better performance.
+We assign its delivery mode to `non-persistent` for better performance.
 
 The name of the topic is loaded by the `javax.naming.InitialContext.InitialContext()` from the *jndi.properties* project's file.
 

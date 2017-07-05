@@ -5,10 +5,15 @@ summary: Demonstrates persistent messages for guaranteed delivery.
 icon: persistence-with-queues-icon.png
 ---
 
-
-This tutorial builds on the basic concepts introduced in the [publish/subscribe tutorial]({{ site.baseurl }}/publish-subscribe), and will show you how to send and receive persistent messages with JMS 1.1 API client using AMQP and Solace Message Router.
+This tutorial builds on the basic concepts introduced in the [publish/subscribe tutorial]({{ site.baseurl }}/publish-subscribe){:target="_blank"}, and will show you how to send and receive persistent messages with JMS 1.1 API client using AMQP and Solace Message Router.
 
 ![Sample Image Text]({{ site.baseurl }}/images/persistence-with-queues-icon.png)
+
+This tutorial is available in [GitHub]({{ site.repository }}){:target="_blank"} along with the other [Solace Getting Started AMQP Tutorials]({{ site.links-get-started-amqp }}){:target="_top"}.
+
+At the end, this tutorial walks through downloading and running the sample from source.
+
+This tutorial focuses on using a non-Solace JMS API implementation. For using the Solace JMS API see [Solace Getting Started JMS Tutorials]({{ site.links-get-started-jms }}){:target="_blank"}.
 
 ## Assumptions
 
@@ -16,11 +21,14 @@ This tutorial assumes the following:
 
 * You are familiar with Solace [core concepts]({{ site.docs-core-concepts }}){:target="_top"}.
 * You have access to a running Solace message router with the following configuration:
-    * Enabled “default” message VPN
-    * Enabled “default” client username
-    * Enabled “default” client profile with guaranteed messaging permissions.
+    * Enabled `default` message VPN
+    * Enabled `default` client username
+    * Enabled `default` client profile with guaranteed messaging permissions.
+    * A durable queue with the name `amqp/tutorial/queue` exists on the `default` message VPN.
+         * See [Configuring Queues]({{ site.docs-confugure-queues }}){:target="_blank"} for details on how to configure durable queues on Solace Message Routers with Solace CLI.
+         * See [Management Tools]({{ site.docs-management-tools }}){:target="_top"} for other tools for configure durable queues.
 
-One simple way to get access to a Solace message router is to start a Solace VMR load [as outlined here]({{ site.docs-vmr-setup }}){:target="_top"}. By default the Solace VMR will run with the “default” message VPN configured and ready for messaging. Going forward, this tutorial assumes that you are using the Solace VMR. If you are using a different Solace message router configuration, adapt the instructions to match your configuration.
+One simple way to get access to a Solace message router is to start a Solace VMR load [as outlined here]({{ site.docs-vmr-setup }}){:target="_top"}. By default the Solace VMR will run with the `default` message VPN configured and ready for messaging. Going forward, this tutorial assumes that you are using the Solace VMR. If you are using a different Solace message router configuration, adapt the instructions to match your configuration.
 
 ## Goals
 
@@ -48,15 +56,27 @@ In order to send or receive messages to a Solace message router, you need to kno
 <tr>
 <td>Message VPN</td>
 <td>String</td>
-<td>The “default” Solace message router Message VPN that this client will connect to.</td>
+<td>The `default` Solace message router Message VPN that this client will connect to.</td>
 </tr>
 <tr>
 <td>Client Username</td>
 <td>String</td>
-<td>The “default” client username.</td>
+<td>The `default` client username.</td>
 </tr>
 </tbody>
 </table>
+
+## Java Messaging Service (JMS) Introduction
+
+JMS is a standard API for sending and receiving messages. As such, in addition to information provided on the Solace developer portal, you may also look at some external sources for more details about JMS. The following are good places to start
+
+1. [http://java.sun.com/products/jms/docs.html](http://java.sun.com/products/jms/docs.html){:target="_blank"}.
+2. [https://en.wikipedia.org/wiki/Java_Message_Service](https://en.wikipedia.org/wiki/Java_Message_Service){:target="_blank"}
+3. [https://docs.oracle.com/javaee/7/tutorial/partmessaging.htm#GFIRP3](https://docs.oracle.com/javaee/7/tutorial/partmessaging.htm#GFIRP3){:target="_blank"}
+
+The last (Oracle docs) link points you to the JEE official tutorials which provide a good introduction to JMS.
+
+This tutorial focuses on using [JMS 1.1 (April 12, 2002)]({{ site.links-jms1-specification }}){:target="_blank"}, for [JMS 2.0 (May 21, 2013)]({{ site.links-jms2-specification }}){:target="_blank"} see [Solace Getting Started AMQP JMS 2.0 Tutorials]({{ site.links-get-started-amqp-jms2 }}){:target="_blank"}.
 
 ## Obtaining JMS 1.1 API
 
@@ -101,11 +121,17 @@ At this point the application is connected to the Solace Message Router and read
 
 ## Sending a persistent message to a queue
 
-![sending-message-to-queue]({{ site.baseurl }}/images/sending-message-to-queue-300x160.png)
+In order to send a message to a queue a JMS queue sender (a specialization of the JMS *Producer*) needs to be created.
 
-There is no difference in the actual method calls to the JMS `QueueSender` when sending a JMS PERSISTENT message as compared to a JMS NON-PERSISTENT message shown in the publish/subscribe tutorial. The difference in the JMS PERSISTENT message is that the Solace Message Router will acknowledge the message once it is successfully stored on the message router and the `QueueSender.send()` call will not return until it has successfully received this acknowledgement. This means that in JMS, all calls to the `QueueSender.send()` are blocking calls and they wait for message confirmation from the Solace message router before proceeding. This is outlined in the JMS 1.1 specification and Solace JMS adheres to this requirement.
+![sending-message-to-queue]({{ site.baseurl }}/images/persistence-with-queues-details-2.png)
 
-The name of the queue for sending messages is loaded by `javax.naming.InitialContext.InitialContext()` from the *jndi.properties* project's file. It must exist on the Solace Message Router as a `durable queue`. See [Management Tools]({{ site.docs-management-tools }}){:target="_top"} on how to do it administratively. [JDL comment: what does 'it' refer to?]
+There is no difference in the actual method calls to the JMS `QueueSender` when sending a JMS `persistent` message as compared to a JMS `non-persistent` message shown in the [publish/subscribe tutorial]({{ site.baseurl }}/publish-subscribe){:target="_blank"}. The difference in the JMS `persistent` message is that the Solace Message Router will acknowledge the message once it is successfully stored on the message router and the `QueueSender.send()` call will not return until it has successfully received this acknowledgement. This means that in JMS, all calls to the `QueueSender.send()` are blocking calls and they wait for message confirmation from the Solace message router before proceeding. This is outlined in the JMS 1.1 specification and Solace JMS adheres to this requirement.
+
+The name of the queue for sending messages is loaded by `javax.naming.InitialContext.InitialContext()` from the *jndi.properties* project's file. It must exist on the Solace Message Router as a `durable queue`.
+
+See [Configuring Queues]({{ site.docs-confugure-queues }}){:target="_blank"} for details on how to configure durable queues on Solace Message Routers with Solace CLI.
+
+See [Management Tools]({{ site.docs-management-tools }}){:target="_top"} for other tools for configure durable queues.
 
 *jndi.properties*
 ~~~
@@ -129,9 +155,9 @@ messageSender.send(message);
 
 ## Receiving a persistent message from a queue
 
-![]({{ site.baseurl }}/images/receiving-message-from-queue-300x160.png)
+In order to receive a persistent message from a queue a JMS queue receiver (a specialization of the JMS *Consumer*) needs to be created.
 
-In order to receive a persistent message from a queue a JMS queue receiver needs to be created.
+![]({{ site.baseurl }}/images/persistence-with-queues-details-1.png)
 
 The name of the queue is loaded by the `javax.naming.InitialContext.InitialContext()` from the *jndi.properties* project's file, and it is the same as the one to which we send messages.
 
@@ -161,7 +187,16 @@ Combining the example source code shown above results in the following source co
 *   [QueueSender.java]({{ site.repository }}/blob/master/src/main/java/com/solace/samples/QueueSender.java){:target="_blank"}
 *   [QueueReceiver.java]({{ site.repository }}/blob/master/src/main/java/com/solace/samples/QueueReceiver.java){:target="_blank"}
 
-## Building
+### Getting the Source
+
+Clone the GitHub repository containing the Solace samples.
+
+```
+git clone {{ site.repository }}
+cd {{ site.baseurl | remove: '/'}}
+```
+
+### Building
 
 Modify the *jndi.properties* file to reflect your Solace Message Router host and port number for the AMQP service.
 
@@ -180,7 +215,7 @@ java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencies.
 java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencies.jar  com.solace.samples.QueueSender
 ~~~
 
-## Sample Output
+### Sample Output
 
 First start the `QueueReceiver` so that it is up and waiting for messages.
 
