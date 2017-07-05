@@ -2,13 +2,13 @@
 layout: tutorials
 title: Persistence with Queues
 summary: Demonstrates persistent messages for guaranteed delivery.
-icon: persistence-icon.png
+icon: persistence-with-queues-icon.png
 ---
 
 
 This tutorial builds on the basic concepts introduced in the [publish/subscribe tutorial]({{ site.baseurl }}/publish-subscribe), and will show you how to send and receive persistent messages with JMS 1.1 API client using AMQP and Solace Message Router.
 
-![Sample Image Text]({{ site.baseurl }}/images/persistence-icon.png)
+![Sample Image Text]({{ site.baseurl }}/images/persistence-with-queues-icon.png)
 
 ## Assumptions
 
