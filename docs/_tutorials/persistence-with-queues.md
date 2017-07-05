@@ -105,7 +105,7 @@ At this point the application is connected to the Solace Message Router and read
 
 There is no difference in the actual method calls to the JMS `QueueSender` when sending a JMS PERSISTENT message as compared to a JMS NON-PERSISTENT message shown in the publish/subscribe tutorial. The difference in the JMS PERSISTENT message is that the Solace Message Router will acknowledge the message once it is successfully stored on the message router and the `QueueSender.send()` call will not return until it has successfully received this acknowledgement. This means that in JMS, all calls to the `QueueSender.send()` are blocking calls and they wait for message confirmation from the Solace message router before proceeding. This is outlined in the JMS 1.1 specification and Solace JMS adheres to this requirement.
 
-The name of the queue for sending messages is loaded by the `javax.naming.InitialContext.InitialContext()` from the *jndi.properties* project's file. It must exist on the Solace Message Router as a `durable queue`. See [Management Tools]({{ site.docs-management-tools }}){:target="_top"} on how to do it administratively.
+The name of the queue for sending messages is loaded by `javax.naming.InitialContext.InitialContext()` from the *jndi.properties* project's file. It must exist on the Solace Message Router as a `durable queue`. See [Management Tools]({{ site.docs-management-tools }}){:target="_top"} on how to do it administratively. [JDL comment: what does 'it' refer to?]
 
 *jndi.properties*
 ~~~
