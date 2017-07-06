@@ -5,7 +5,6 @@ summary: Demonstrates the request/reply message exchange pattern
 icon: request-reply-icon.png
 ---
 
-
 This tutorial builds on the basic concepts introduced in the [persistence with queues tutorial]({{ site.baseurl }}/persistence-with-queues){:target="_blank"}, and will show you how to send a request, reply to it, and receive the reply. This the request/reply message exchange pattern as illustrated here:
 
 ![Sample Image Text]({{ site.baseurl }}/images/request-reply-icon.png)
