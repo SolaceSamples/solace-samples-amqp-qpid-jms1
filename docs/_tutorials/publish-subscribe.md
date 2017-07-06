@@ -78,7 +78,7 @@ This tutorial focuses on using [JMS 1.1 (April 12, 2002)]({{ site.links-jms1-spe
 
 This tutorial assumes you have downloaded and successfully installed the [Apache Qpid JMS client](https://qpid.apache.org/components/jms/index.html). If your environment differs from the example, then adjust the build instructions appropriately.
 
-The easiest way to install the JMS 1.1 API is through Maven. See the project's *pom.xml* file for details.
+The easiest way to install it is through Maven. See the project's *pom.xml* file for details.
 
 ## Connecting to the Solace Message Router
 
@@ -198,7 +198,7 @@ Modify the *jndi.properties* file to reflect your Solace Message Router host and
 
 You can build and run both example files directly from Eclipse.
 
-If you prefer to use the comamnd line, build a jar file that includes all dependencies by executing the following:
+If you prefer to use the command line, build a jar file that includes all dependencies by executing the following:
 
 ~~~sh
 mvn assembly:single
