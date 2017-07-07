@@ -17,7 +17,7 @@ This tutorial focuses on using a non-Solace JMS API implementation. For using th
 
 In the JMS, when sending persistent messages, the JMS *Producer* must not return from the blocking `send()` method until the message is fully acknowledged by the message broker.
 
-This behavior is mandated by the specification. Therefore applications sending persistent messages using the Solace Message Router are guaranteed that the messages is accepted by the Router by the time the `send()` call returns. No extra publisher acknowledgement handling is required or possible.
+This behavior is mandated by the specification [JDL comment: Which specification, JMS or AMQP?]. Therefore applications sending persistent messages using the Solace Message Router are guaranteed that the messages is accepted by the router by the time the `send()` call returns. No extra publisher acknowledgement handling is required or possible.
 
 This behavior means that persistent message producers are forced to block on sending each message. This can lead to performance bottlenecks on publish. Applications can work around this by using JMS Session based transactions and committing the transaction only after several messages are sent to the messaging system.
 
