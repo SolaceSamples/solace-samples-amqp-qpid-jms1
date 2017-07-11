@@ -28,14 +28,14 @@ One simple way to get access to a Solace message router is to start a Solace VMR
 
 ## Goals
 
-The goal of this tutorial is to demonstrate how to use JMS 1.1 API over AMQP using the Solace Message Router. This tutorial will show you:
+The goal of this tutorial is to demonstrate how to use a JMS 1.1 API over AMQP using the Solace Message Router. This tutorial will show you:
 
 1. How to build and send a message on a topic
 2. How to subscribe to a topic and receive a message
 
 ## Solace message router properties
 
-In order to send or receive messages to a Solace message router, you need to know a few details about how to connect to the Solace message router. Specifically, you need to know the following:
+In order to send or receive messages to a Solace message router, you need to know a few details about how to connect to the router. Specifically, you need to know the following:
 
 <table>
 <tbody>
@@ -64,7 +64,7 @@ In order to send or receive messages to a Solace message router, you need to kno
 
 ## Java Messaging Service (JMS) Introduction
 
-JMS is a standard API for sending and receiving messages. As such, in addition to information provided on the Solace developer portal, you may also look at some external sources for more details about JMS. The following are good places to start
+JMS is a standard API for sending and receiving messages. As such, in addition to information provided on the Solace developer portal, you may also look at some external sources for more details about JMS. The following are good places to start:
 
 1. [http://java.sun.com/products/jms/docs.html](http://java.sun.com/products/jms/docs.html){:target="_blank"}.
 2. [https://en.wikipedia.org/wiki/Java_Message_Service](https://en.wikipedia.org/wiki/Java_Message_Service){:target="_blank"}
@@ -153,7 +153,7 @@ In order to receive a message from a topic a JMS topic subscriber (a specializat
 
 ![]({{ site.baseurl }}/images/publish-subscribe-details-1.png)
 
-The name of the topic is loaded by the `javax.naming.InitialContext.InitialContext()` from the *jndi.properties* project's file and its name is the same as the one we publish messages to.
+The name of the topic is loaded by `javax.naming.InitialContext.InitialContext()` from the *jndi.properties* project's file and its name is the same as the one used to publish messages to.
 
 *jndi.properties*
 ~~~
@@ -174,9 +174,9 @@ This is how we receive messages published to the subscribed topic.
 Message message = subscriber.receive();
 ~~~
 
-If you execute the `TopicSubscriber.java` program, it will block at the `subscriber.receive()` call until a message is received. Now if you execute the `TopicPublisher.java` that publishes a message, the `TopicSubscriber.java` program will resume and print out the received message.
+If you execute the `TopicSubscriber.java` program, it will block at the `subscriber.receive()` call until a message is received. Now if you execute the `TopicPublisher.java` program that publishes a message, the `TopicSubscriber.java` program will resume and print out the received message.
 
-## Summarizing
+## Summary
 
 Combining the example source code shown above results in the following source code files:
 
@@ -230,7 +230,7 @@ $  java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependenci
 2017-06-27T17:27:34,401 INFO samples.TopicPublisher - Message published successfully.
 ~~~
 
-Notice how the published message is received by the the `TopicSubscriber`.
+Notice how the published message is received by the `TopicSubscriber`.
 
 ~~~sh
 ...
@@ -238,6 +238,6 @@ Notice how the published message is received by the the `TopicSubscriber`.
 2017-06-27T17:27:34,418 INFO samples.TopicSubscriber - Received message with string data: "Message with String Data"
 ~~~
 
-With that now you know how to use JMS 1.1 API over AMQP using the Solace Message Router to implement the publish/subscribe message exchange pattern.
+With that you now know how to use the JMS 1.1 API over AMQP using the Solace Message Router to implement the publish/subscribe message exchange pattern.
 
-If you have any issues publishing and receiving a message, check the [Solace community]({{ site.links-community }}){:target="_top"} for answers to common issues seen.
+If you have any issues with publishing and receiving messages, check the [Solace community]({{ site.links-community }}){:target="_top"} for answers to common issues seen.
