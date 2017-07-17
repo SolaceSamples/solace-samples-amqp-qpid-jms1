@@ -23,18 +23,17 @@
 
 package com.solace.samples;
 
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
+import java.util.Hashtable;
 
+import javax.jms.Connection;
+import javax.jms.ConnectionFactory;
 import javax.jms.DeliveryMode;
-import javax.jms.ExceptionListener;
 import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.MessageProducer;
 import javax.jms.Session;
+import javax.jms.TextMessage;
 import javax.jms.Topic;
-import javax.jms.TopicConnectionFactory;
-import javax.jms.TopicConnection;
-import javax.jms.TopicSession;
-
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -46,58 +45,57 @@ import javax.naming.NamingException;
  */
 public class TopicPublisher {
 
-    private static final Logger LOG = LogManager.getLogger(TopicPublisher.class.getName());
+    final String SOLACE_HOST_AMQP_PORT = "192.168.133.8:8555";
+    final String TOPIC_NAME = "T/GettingStarted/pubsub";
 
-    // connectionfactory.solaceConnectionLookup in file "jndi.properties"
     final String SOLACE_CONNECTION_LOOKUP = "solaceConnectionLookup";
-    // topic.topicLookup in file "jndi.properties"
-    final String TOPIC_LOOKUP = "topicLookup";
 
-    // session parameters
-    final int ACK_MODE = Session.AUTO_ACKNOWLEDGE;
-    final boolean IS_TRANSACTED = false;
+    private void run() throws JMSException, NamingException {
+        System.out.printf("TopicPublisher is connecting to Solace router %s...%n", SOLACE_HOST_AMQP_PORT);
 
-    private void run() {
-        try {
-            // pick up properties from the "jndi.properties" file
-            Context initialContext = new InitialContext();
-            TopicConnectionFactory factory = (TopicConnectionFactory) initialContext.lookup(SOLACE_CONNECTION_LOOKUP);
+        // Programmatically create the connection factory using default settings
+        Hashtable<Object, Object> env = new Hashtable<Object, Object>();
+        env.put(Context.INITIAL_CONTEXT_FACTORY, "org.apache.qpid.jms.jndi.JmsInitialContextFactory");
+        env.put("connectionfactory." + SOLACE_CONNECTION_LOOKUP, "amqp://" + SOLACE_HOST_AMQP_PORT);
+        Context initialContext = new InitialContext(env);
+        ConnectionFactory connectionFactory = (ConnectionFactory) initialContext.lookup(SOLACE_CONNECTION_LOOKUP);
 
-            // establish connection that uses the Solace Message Router as a message broker
-            try (TopicConnection connection = factory.createTopicConnection()) {
-                connection.setExceptionListener(new TopicConnectionExceptionListener());
-                connection.start();
+        // Create connection to the Solace router
+        Connection connection = connectionFactory.createConnection();
 
-                // the target for messages: a topic on the message broker
-                Topic target = (Topic) initialContext.lookup(TOPIC_LOOKUP);
+        // Create a non-transacted, Auto ACK session.
+        Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
-                // create session and publisher
-                try (TopicSession session = connection.createTopicSession(IS_TRANSACTED, ACK_MODE);
-                        javax.jms.TopicPublisher publisher = session.createPublisher(target)) {
-                    publisher.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
+        System.out.println("Connected to the Solace router.");
 
-                    // publish one message with string data
-                    publisher.publish(session.createTextMessage("Message with String Data"));
-                    LOG.info("Message published successfully.");
-                }
-            } catch (JMSException ex) {
-                LOG.error(ex);
-            }
+        // Create the publishing topic programmatically
+        Topic topic = session.createTopic(TOPIC_NAME);
 
-            initialContext.close();
-        } catch (NamingException ex) {
-            LOG.error(ex);
-        }
+        // Create the message producer for the created topic
+        MessageProducer messageProducer = session.createProducer(topic);
+
+        // Create the message
+        TextMessage message = session.createTextMessage("Hello world!");
+
+        System.out.printf("Sending message '%s' to topic '%s'...%n", message.getText(), topic.toString());
+
+        // Send the message
+        messageProducer.send(message,
+                DeliveryMode.NON_PERSISTENT,
+                Message.DEFAULT_PRIORITY, Message.DEFAULT_TIME_TO_LIVE);
+        System.out.println("Sent successfully. Exiting...");
+
+        // Close everything in the order reversed from the opening order
+        // NOTE: as the interfaces below extend AutoCloseable,
+        // with them it's possible to use the "try-with-resources" Java statement
+        // see details at https://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html
+        messageProducer.close();
+        session.close();
+        connection.close();
+        initialContext.close();
     }
 
-    private static class TopicConnectionExceptionListener implements ExceptionListener {
-        @Override
-        public void onException(JMSException ex) {
-            LOG.error(ex);
-        }
-    }
-
-    public static void main(String[] args) {
+    public static void main(String[] args) throws JMSException, NamingException {
         new TopicPublisher().run();
     }
 
