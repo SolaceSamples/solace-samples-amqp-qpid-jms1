@@ -45,18 +45,18 @@ import javax.naming.NamingException;
  */
 public class TopicPublisher {
 
-    final String SOLACE_HOST_AMQP_PORT = "192.168.133.8:8555";
     final String TOPIC_NAME = "T/GettingStarted/pubsub";
 
     final String SOLACE_CONNECTION_LOOKUP = "solaceConnectionLookup";
 
-    private void run() throws JMSException, NamingException {
-        System.out.printf("TopicPublisher is connecting to Solace router %s...%n", SOLACE_HOST_AMQP_PORT);
+    private void run(String... args) throws JMSException, NamingException {
+        String solaceHost = args[0];
+        System.out.printf("TopicPublisher is connecting to Solace router %s...%n", solaceHost);
 
         // Programmatically create the connection factory using default settings
         Hashtable<Object, Object> env = new Hashtable<Object, Object>();
         env.put(Context.INITIAL_CONTEXT_FACTORY, "org.apache.qpid.jms.jndi.JmsInitialContextFactory");
-        env.put("connectionfactory." + SOLACE_CONNECTION_LOOKUP, "amqp://" + SOLACE_HOST_AMQP_PORT);
+        env.put("connectionfactory." + SOLACE_CONNECTION_LOOKUP, "amqp://" + solaceHost);
         Context initialContext = new InitialContext(env);
         ConnectionFactory connectionFactory = (ConnectionFactory) initialContext.lookup(SOLACE_CONNECTION_LOOKUP);
 
@@ -92,11 +92,16 @@ public class TopicPublisher {
         messageProducer.close();
         session.close();
         connection.close();
+        // this needs to be close explicitly, it does not extend AutoCloseable
         initialContext.close();
     }
 
     public static void main(String[] args) throws JMSException, NamingException {
-        new TopicPublisher().run();
+        if (args.length < 1) {
+            System.out.println("Usage: TopicPublisher <msg_backbone_ip:amqp_port>");
+            System.exit(-1);
+        }
+        new TopicPublisher().run(args);
     }
 
 }
