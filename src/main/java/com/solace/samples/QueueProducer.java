@@ -77,7 +77,8 @@ public class QueueProducer {
 
         // Send the message
         // NOTE: JMS Message Priority is not supported by the Solace Message Bus
-        messageProducer.send(message, DeliveryMode.PERSISTENT, Message.DEFAULT_PRIORITY, Message.DEFAULT_TIME_TO_LIVE);
+        messageProducer.send(queue, message, DeliveryMode.PERSISTENT, Message.DEFAULT_PRIORITY,
+                Message.DEFAULT_TIME_TO_LIVE);
 
         System.out.println("Sent successfully. Exiting...");
 

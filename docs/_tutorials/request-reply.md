@@ -143,7 +143,7 @@ Now send the request:
 
 *BasicRequestor.java*
 ```java
-requestProducer.send(request, DeliveryMode.NON_PERSISTENT,
+requestProducer.send(requestTopic, request, DeliveryMode.NON_PERSISTENT,
         Message.DEFAULT_PRIORITY,
         Message.DEFAULT_TIME_TO_LIVE);
 ```
