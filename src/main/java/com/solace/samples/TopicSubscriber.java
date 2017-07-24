@@ -86,7 +86,7 @@ public class TopicSubscriber {
                     }
                     System.out.printf("Message Content:%n%s%n", message.toString());
                     latch.countDown(); // unblock the main thread
-                } catch (JMSException ex) {
+                } catch (Exception ex) {
                     System.out.println("Error processing incoming message.");
                     ex.printStackTrace();
                 }

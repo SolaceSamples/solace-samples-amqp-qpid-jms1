@@ -106,7 +106,7 @@ At this point the application is connected to the Solace Message Router and read
 
 ## Publishing messages
 
-In order to publish a message to a topic a JMS message *Producer* needs to be created.
+In order to publish a message to a topic a JMS message *MessageProducer* needs to be created.
 
 ![]({{ site.baseurl }}/images/publish-subscribe-details-2.png)
 
@@ -131,7 +131,7 @@ Now if you execute the `TopicPublisher.java` program it will successfully publis
 
 ## Receiving messages
 
-In order to receive a message from a topic a JMS *Consumer*) needs to be created.
+In order to receive a message from a topic a JMS *MessageConsumer* needs to be created.
 
 ![]({{ site.baseurl }}/images/publish-subscribe-details-1.png)
 
@@ -157,7 +157,7 @@ messageConsumer.setMessageListener(new MessageListener() {
             }
             System.out.printf("Message Content:%n%s%n", message.toString());
             latch.countDown(); // unblock the main thread
-        } catch (JMSException ex) {
+        } catch (Exception ex) {
             System.out.println("Error processing incoming message.");
             ex.printStackTrace();
         }
@@ -187,8 +187,6 @@ cd {{ site.baseurl | remove: '/'}}
 
 ### Building
 
-Modify the *jndi.properties* file to reflect your Solace Message Router host and port number for the AMQP service.
-
 You can build and run both example files directly from Eclipse.
 
 If you prefer to use the command line, build a jar file that includes all dependencies by executing the following:
@@ -197,12 +195,25 @@ If you prefer to use the command line, build a jar file that includes all depend
 mvn compile
 mvn assembly:single
 ```
+or
+
+```sh
+./gradlew assemble
+```
 
 The examples can be run as:
 
 ```sh
-java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencies.jar  com.solace.samples.TopicSubscriber
-java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencies.jar  com.solace.samples.TopicPublisher
+java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencies.jar  com.solace.samples.TopicSubscriber amqp://SOLACE_HOST:AMQP_PORT
+java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencies.jar  com.solace.samples.TopicPublisher amqp://SOLACE_HOST:AMQP_PORT
+```
+
+or
+
+```sh
+cd build/staged/bin
+./topicSubscriber amqp://SOLACE_HOST:AMQP_PORT
+./topicPublisher amqp://SOLACE_HOST:AMQP_PORT
 ```
 
 ### Sample Output
@@ -210,16 +221,16 @@ java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencies.
 First start the `TopicSubscriber` so that it is up and waiting for published messages. You can start multiple instances of this application, and all of them will receive published messages.
 
 ```sh
-$ java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencies.jar  com.solace.samples.TopicSubscriber amqp:// SOLACE_HOST:AMQP_POST
-TopicSubscriber is connecting to Solace router amqp://SOLACE_HOST:AMQP_POST...
+$ java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencies.jar  com.solace.samples.TopicSubscriber amqp://SOLACE_HOST:AMQP_PORT
+TopicSubscriber is connecting to Solace router amqp://SOLACE_HOST:AMQP_PORT...
 Connected to the Solace router.
 Awaiting message...
 ```
 
 Then you can start the `TopicPublisher` to publish a message.
 ```sh
-$  java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencies.jar com.solace.samples.TopicPublisher amqp:// SOLACE_HOST:AMQP_POST
-TopicPublisher is connecting to Solace router amqp://SOLACE_HOST:AMQP_POST...
+$  java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencies.jar com.solace.samples.TopicPublisher amqp://SOLACE_HOST:AMQP_PORT
+TopicPublisher is connecting to Solace router amqp://SOLACE_HOST:AMQP_PORT...
 Connected to the Solace router.
 Sending message 'Hello world!' to topic 'T/GettingStarted/pubsub'...
 Sent successfully. Exiting...
