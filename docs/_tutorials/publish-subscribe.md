@@ -84,97 +84,90 @@ The easiest way to install it is through Maven. See the project's *pom.xml* file
 
 In order to send or receive messages, an application must start a JMS connection.
 
-There is only one required parameter for establishing the JMS connection: the Solace Message Router host name with the AMQP service port number. The value of this parameter is loaded in the examples by the `javax.naming.InitialContext.InitialContext()` from the *jndi.properties* project's file, but it could be assigned directly in the application by assigning the corresponding environment variable.
-
-*jndi.properties*
-~~~
-java.naming.factory.initial = org.apache.qpid.jms.jndi.JmsInitialContextFactory
-connectionfactory.solaceConnectionLookup = amqp://192.168.123.45:8555
-~~~
-
-Because the publish/subscribe pattern uses the publish-and-subscribe messaging model, the specialized `TopicConnectionFactory` and `TopicConnection` are used.
+There are three parameters for establishing the JMS connection: the Solace Message Router host name with the AMQP service port number, the client username and the optional password.
 
 *TopicPublisher.java/TopicSubscriber.java*
-~~~java
-Context initialContext = new InitialContext();
-TopicConnectionFactory factory = (TopicConnectionFactory) initialContext.lookup("solaceConnectionLookup");
+```java
+final String SOLACE_USERNAME = "clientUsername";
+final String SOLACE_PASSWORD = "password";
 
-try (TopicConnection connection = factory.createTopicConnection()) {
-    connection.setExceptionListener(new TopicConnectionExceptionListener());
-    connection.start();
-...
-~~~
+ConnectionFactory connectionFactory = new JmsConnectionFactory(SOLACE_USERNAME, SOLACE_PASSWORD, solaceHost);
+Connection connection = connectionFactory.createConnection();
+```
 
-The target for publishing messages will be a JMS Topic, therefore a session of the `javax.jms.TopicSession` type needs to be created. The session will be non-transacted using the acknowledge mode that automatically acknowledges a client's receipt of a message.
+Next, a session needs to be created. The session will be non-transacted using the acknowledge mode that automatically acknowledges a client's receipt of a message.
 
 *TopicPublisher.java/TopicSubscriber.java*
-~~~java
-try (TopicSession session = connection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE)) {
-...
-~~~
+```java
+Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+```
 
 At this point the application is connected to the Solace Message Router and ready to publish messages.
 
 ## Publishing messages
 
-In order to publish a message to a topic a JMS topic publisher (a specialization of the JMS *Producer*) needs to be created.
+In order to publish a message to a topic a JMS message *MessageProducer* needs to be created.
 
 ![]({{ site.baseurl }}/images/publish-subscribe-details-2.png)
 
-We assign its delivery mode to `non-persistent` for better performance.
-
-The name of the topic is loaded by the `javax.naming.InitialContext.InitialContext()` from the *jndi.properties* project's file.
-
-*jndi.properties*
-~~~
-topic.topicLookup = amqp/tutorial/topic
-~~~
-
 *TopicPublisher.java*
-~~~java
-Topic target = (Topic) initialContext.lookup("topicLookup");
-try (javax.jms.TopicPublisher publisher = session.createPublisher(target)) {
-    publisher.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
-...
-~~~
+```java
+final String TOPIC_NAME = "T/GettingStarted/pubsub";
+Topic topic = session.createTopic(TOPIC_NAME);
+MessageProducer messageProducer = session.createProducer(topic);
+```
 
 Now we can publish the message.
 
 *TopicPublisher.java*
-~~~java
-publisher.publish(session.createTextMessage("Message with String Data"));
-~~~
+```java
+TextMessage message = session.createTextMessage("Hello world!");
+messageProducer.send(message,
+        DeliveryMode.NON_PERSISTENT,
+        Message.DEFAULT_PRIORITY, Message.DEFAULT_TIME_TO_LIVE);
+```
 
-Now if you execute the `TopicPublisher.java` program it will successfully publish a message, but another application is required to receive the message.
+Now if you execute the `TopicPublisher.java` program it will successfully publish a message, but another application is required to receive it.
 
 ## Receiving messages
 
-In order to receive a message from a topic a JMS topic subscriber (a specialization of the JMS *Consumer*) needs to be created.
+In order to receive a message from a topic a JMS *MessageConsumer* needs to be created.
 
 ![]({{ site.baseurl }}/images/publish-subscribe-details-1.png)
 
-The name of the topic is loaded by `javax.naming.InitialContext.InitialContext()` from the *jndi.properties* project's file and its name is the same as the one used to publish messages to.
+*TopicSubscriber.java*
+```java
+final String TOPIC_NAME = "T/GettingStarted/pubsub";
+Topic topic = session.createTopic(TOPIC_NAME);
+MessageConsumer messageConsumer = session.createConsumer(topic);
+```
 
-*jndi.properties*
-~~~
-topic.topicLookup = amqp/tutorial/topic
-~~~
+We will be using the anonymous inner class for receiving messages asynchronously.
 
 *TopicSubscriber.java*
-~~~java
-Topic source = (Topic) initialContext.lookup("topicLookup");
-try (javax.jms.TopicSubscriber publisher = session.createSubscriber(source)) {
-...
-~~~
+```java
+messageConsumer.setMessageListener(new MessageListener() {
+    @Override
+    public void onMessage(Message message) {
+        try {
+            if (message instanceof TextMessage) {
+                System.out.printf("TextMessage received: '%s'%n", ((TextMessage) message).getText());
+            } else {
+                System.out.println("Message received.");
+            }
+            System.out.printf("Message Content:%n%s%n", message.toString());
+            latch.countDown(); // unblock the main thread
+        } catch (Exception ex) {
+            System.out.println("Error processing incoming message.");
+            ex.printStackTrace();
+        }
+    }
+});
+connection.start();
+latch.await();
+```
 
-This is how we receive messages published to the subscribed topic.
-
-*TopicSubscriber.java*
-~~~java
-Message message = subscriber.receive();
-~~~
-
-If you execute the `TopicSubscriber.java` program, it will block at the `subscriber.receive()` call until a message is received. Now if you execute the `TopicPublisher.java` program that publishes a message, the `TopicSubscriber.java` program will resume and print out the received message.
+If you execute the `TopicSubscriber.java` program, it will block at the `latch.await()` call until a message is received. Now if you execute the `TopicPublisher.java` program that publishes a message, the `TopicSubscriber.java` program will resume and print out the received message.
 
 ## Summary
 
@@ -194,49 +187,63 @@ cd {{ site.baseurl | remove: '/'}}
 
 ### Building
 
-Modify the *jndi.properties* file to reflect your Solace Message Router host and port number for the AMQP service.
-
 You can build and run both example files directly from Eclipse.
 
 If you prefer to use the command line, build a jar file that includes all dependencies by executing the following:
 
-~~~sh
+```sh
+mvn compile
 mvn assembly:single
-~~~
+```
+or
+
+```sh
+./gradlew assemble
+```
 
 The examples can be run as:
 
-~~~sh
-java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencies.jar  com.solace.samples.TopicSubscriber
-java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencies.jar  com.solace.samples.TopicPublisher
-~~~
+```sh
+java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencies.jar  com.solace.samples.TopicSubscriber amqp://SOLACE_HOST:AMQP_PORT
+java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencies.jar  com.solace.samples.TopicPublisher amqp://SOLACE_HOST:AMQP_PORT
+```
+
+or
+
+```sh
+cd build/staged/bin
+./topicSubscriber amqp://SOLACE_HOST:AMQP_PORT
+./topicPublisher amqp://SOLACE_HOST:AMQP_PORT
+```
 
 ### Sample Output
 
 First start the `TopicSubscriber` so that it is up and waiting for published messages. You can start multiple instances of this application, and all of them will receive published messages.
 
-~~~sh
-$ java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencies.jar  com.solace.samples.TopicSubscriber
-2017-06-27T17:23:25,074 INFO sasl.SaslMechanismFinder - Best match for SASL auth was: SASL-ANONYMOUS
-2017-06-27T17:23:25,107 INFO jms.JmsConnection - Connection ID:a76e8496-eee3-4a5c-a908-eac0e4789dc2:1 connected to remote Broker: amqp://192.168.123.45:8555
-2017-06-27T17:23:25,137 INFO samples.TopicSubscriber - Waiting for a message...
-~~~
+```sh
+$ java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencies.jar  com.solace.samples.TopicSubscriber amqp://SOLACE_HOST:AMQP_PORT
+TopicSubscriber is connecting to Solace router amqp://SOLACE_HOST:AMQP_PORT...
+Connected to the Solace router.
+Awaiting message...
+```
 
 Then you can start the `TopicPublisher` to publish a message.
-~~~sh
-$  java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencies.jar com.solace.samples.TopicPublisher
-2017-06-27T17:27:34,339 INFO sasl.SaslMechanismFinder - Best match for SASL auth was: SASL-ANONYMOUS
-2017-06-27T17:27:34,364 INFO jms.JmsConnection - Connection ID:254fe96f-bf46-4d96-a4f1-74a25981785e:1 connected to remote Broker: amqp://192.168.123.45:8555
-2017-06-27T17:27:34,401 INFO samples.TopicPublisher - Message published successfully.
-~~~
+```sh
+$  java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencies.jar com.solace.samples.TopicPublisher amqp://SOLACE_HOST:AMQP_PORT
+TopicPublisher is connecting to Solace router amqp://SOLACE_HOST:AMQP_PORT...
+Connected to the Solace router.
+Sending message 'Hello world!' to topic 'T/GettingStarted/pubsub'...
+Sent successfully. Exiting...
+```
 
 Notice how the published message is received by the `TopicSubscriber`.
 
-~~~sh
-...
-2017-06-27T17:27:05,405 INFO samples.TopicSubscriber - Waiting for a message...
-2017-06-27T17:27:34,418 INFO samples.TopicSubscriber - Received message with string data: "Message with String Data"
-~~~
+```sh
+Awaiting message...
+TextMessage received: 'Hello world!'
+Message Content:
+JmsTextMessage { org.apache.qpid.jms.provider.amqp.message.AmqpJmsTextMessageFacade@18c1752a }
+```
 
 With that you now know how to use the JMS 1.1 API over AMQP using the Solace Message Router to implement the publish/subscribe message exchange pattern.
 
