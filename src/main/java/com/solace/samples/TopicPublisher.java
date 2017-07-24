@@ -72,7 +72,7 @@ public class TopicPublisher {
         System.out.printf("Sending message '%s' to topic '%s'...%n", message.getText(), topic.toString());
 
         // Send the message
-        messageProducer.send(message,
+        messageProducer.send(topic, message,
                 DeliveryMode.NON_PERSISTENT,
                 Message.DEFAULT_PRIORITY, Message.DEFAULT_TIME_TO_LIVE);
         System.out.println("Sent successfully. Exiting...");
