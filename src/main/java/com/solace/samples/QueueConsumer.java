@@ -18,10 +18,12 @@
  */
 
 /**
- *  Solace AMQP JMS 1.1 Examples: TopicSubscriber
+ *  Solace AMQP JMS 1.1 Examples: QueueConsumer
  */
 
 package com.solace.samples;
+
+import org.apache.qpid.jms.JmsConnectionFactory;
 
 import java.util.concurrent.CountDownLatch;
 
@@ -33,29 +35,27 @@ import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 import javax.jms.Session;
 import javax.jms.TextMessage;
-import javax.jms.Topic;
-
-import org.apache.qpid.jms.JmsConnectionFactory;
+import javax.jms.Queue;
 
 /**
- * Subscribes to messages published to a topic using JMS 1.1 API over AMQP 1.0. Solace Message Router is used as the
- * message broker.
- *
- * This is the Subscriber in the Publish/Subscribe messaging pattern.
+ * Receives a persistent message from a queue using JMS 1.1 API over AMQP. Solace Message Router is used as the message
+ * broker.
+ * 
+ * The queue used for messages is created on the message broker.
  */
-public class TopicSubscriber {
+public class QueueConsumer {
 
     final String SOLACE_USERNAME = "clientUsername";
     final String SOLACE_PASSWORD = "password";
 
-    final String TOPIC_NAME = "T/GettingStarted/pubsub";
+    final String QUEUE_NAME = "Q/tutorial";
 
     // Latch used for synchronizing between threads
     final CountDownLatch latch = new CountDownLatch(1);
 
     private void run(String... args) throws Exception {
         String solaceHost = args[0];
-        System.out.printf("TopicSubscriber is connecting to Solace router %s...%n", solaceHost);
+        System.out.printf("QueueConsumer is connecting to Solace router %s...%n", solaceHost);
 
         // Programmatically create the connection factory using default settings
         ConnectionFactory connectionFactory = new JmsConnectionFactory(SOLACE_USERNAME, SOLACE_PASSWORD, solaceHost);
@@ -63,16 +63,16 @@ public class TopicSubscriber {
         // Create connection to the Solace router
         Connection connection = connectionFactory.createConnection();
 
-        // Create a non-transacted, Auto ACK session.
-        Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+        // Create a non-transacted, client ACK session.
+        Session session = connection.createSession(false, Session.CLIENT_ACKNOWLEDGE);
 
-        System.out.printf("Connected to the Solace router with client username '%s'.%n", SOLACE_USERNAME);
+        System.out.printf("Connected with username '%s'.%n", SOLACE_USERNAME);
 
-        // Create the subscription topic programmatically
-        Topic topic = session.createTopic(TOPIC_NAME);
+        // Create the queue programmatically and the corresponding router resource
+        Queue queue = session.createQueue(QUEUE_NAME);
 
-        // Create the message consumer for the subscription topic
-        MessageConsumer messageConsumer = session.createConsumer(topic);
+        // From the session, create a consumer for the destination.
+        MessageConsumer messageConsumer = session.createConsumer(queue);
 
         // Use the anonymous inner class for receiving messages asynchronously
         messageConsumer.setMessageListener(new MessageListener() {
@@ -85,6 +85,10 @@ public class TopicSubscriber {
                         System.out.println("Message received.");
                     }
                     System.out.printf("Message Content:%n%s%n", message.toString());
+
+                    // ACK the received message manually because of the set Session.CLIENT_ACKNOWLEDGE above
+                    message.acknowledge();
+
                     latch.countDown(); // unblock the main thread
                 } catch (JMSException ex) {
                     System.out.println("Error processing incoming message.");
@@ -110,10 +114,10 @@ public class TopicSubscriber {
 
     public static void main(String[] args) throws Exception {
         if (args.length < 1) {
-            System.out.println("Usage: TopicSubscriber amqp://<msg_backbone_ip:amqp_port>");
+            System.out.println("Usage: QueueConsumer amqp://<msg_backbone_ip:amqp_port>");
             System.exit(-1);
         }
-        new TopicSubscriber().run(args);
+        new QueueConsumer().run(args);
     }
 
 }
