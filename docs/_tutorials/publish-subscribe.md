@@ -207,6 +207,10 @@ cd {{ site.baseurl | remove: '/'}}
 
 You can build and run both example files directly from Eclipse or with Gradle.
 
+```sh
+./gradlew assemble
+```
+
 The examples can be run as:
 
 ```sh
