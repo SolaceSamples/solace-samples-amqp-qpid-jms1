@@ -78,7 +78,25 @@ This tutorial focuses on using [JMS 1.1 (April 12, 2002)]({{ site.links-jms1-spe
 
 This tutorial assumes you have downloaded and successfully installed the [Apache Qpid JMS client](https://qpid.apache.org/components/jms/index.html). If your environment differs from the example, then adjust the build instructions appropriately.
 
-The easiest way to install it is through Maven. See the project's *pom.xml* file for details.
+The easiest way to install it is through Gradle or Maven.
+
+### Get the API: Using Gradle
+
+```
+dependencies {
+    compile("org.apache.qpid:qpid-jms-client:0.23.+")
+}
+```
+
+### Get the API: Using Maven
+
+```
+<dependency>
+    <groupId>org.apache.qpid</groupId>
+    <artifactId>qpid-jms-client</artifactId>
+    <version>[0.23,)</version>
+</dependency>
+```
 
 ## Connecting to the Solace Message Router
 
