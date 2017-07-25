@@ -253,26 +253,13 @@ cd {{ site.baseurl | remove: '/'}}
 
 ### Building
 
-If you prefer to use the command line, build a jar file that includes all dependencies by executing the following:
-
-```sh
-mvn compile
-mvn assembly:single
-```
-or
+You can build and run both example files directly from Eclipse or with Gradle.
 
 ```sh
 ./gradlew assemble
 ```
 
 The examples can be run as:
-
-```sh
-java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencies.jar  com.solace.samples.BasicReplier amqp://SOLACE_HOST:AMQP_PORT
-java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencies.jar  com.solace.samples.BasicRequestor amqp://SOLACE_HOST:AMQP_PORT
-```
-
-or
 
 ```sh
 cd build/staged/bin
@@ -286,7 +273,7 @@ cd build/staged/bin
 First start the `BasicReplier` so that it is up and waiting for requests.
 
 ```sh
-$ java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencies.jar com.solace.samples.BasicReplier amqp://SOLACE_HOST:AMQP_PORT
+$ basicReplier amqp://SOLACE_HOST:AMQP_PORT
 BasicReplier is connecting to Solace router amqp://SOLACE_HOST:AMQP_PORT...
 Connected to the Solace router with client username 'clientUsername'.
 Awaiting request...
@@ -294,7 +281,7 @@ Awaiting request...
 
 Then you can start the `BasicRequestor` to send the request and receive the reply.
 ```sh
-$ java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencies.jar com.solace.samples.BasicRequestor amqp://SOLACE_HOST:AMQP_PORT
+$ basicRequestor amqp://SOLACE_HOST:AMQP_PORT
 BasicRequestor is connecting to Solace router amqp://SOLACE_HOST:AMQP_PORT...
 Connected to the Solace router with client username 'clientUsername'.
 Sending request 'Sample Request' to topic 'T/GettingStarted/requests'...

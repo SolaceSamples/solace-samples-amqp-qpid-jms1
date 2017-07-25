@@ -220,26 +220,13 @@ cd {{ site.baseurl | remove: '/'}}
 
 ### Building
 
-You can build and run both example files directly from Eclipse.
-
-```sh
-mvn compile
-mvn assembly:single
-```
-or
+You can build and run both example files directly from Eclipse or with Gradle.
 
 ```sh
 ./gradlew assemble
 ```
 
 The examples can be run as:
-
-```sh
-java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencies.jar  com.solace.samples.QueueConsumer amqp://SOLACE_HOST:AMQP_PORT
-java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencies.jar  com.solace.samples.QueueProducer amqp://SOLACE_HOST:AMQP_PORT
-```
-
-or
 
 ```sh
 cd build/staged/bin
@@ -252,7 +239,7 @@ cd build/staged/bin
 First start the `QueueConsumer` so that it is up and waiting for messages.
 
 ```sh
-$ java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencies.jar com.solace.samples.QueueConsumer amqp://SOLACE_HOST:AMQP_PORT
+$ queueConsumer amqp://SOLACE_HOST:AMQP_PORT
 QueueConsumer is connecting to Solace router amqp://SOLACE_HOST:AMQP_PORT...
 Awaiting message...
 ```
@@ -260,7 +247,7 @@ Awaiting message...
 Then you can start the `QueueProducer` to send the message.
 
 ```sh
-$ java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencies.jar  com.solace.samples.QueueProducer amqp://SOLACE_HOST:AMQP_PORT
+$ queueProducer amqp://SOLACE_HOST:AMQP_PORT
 QueueProducer is connecting to Solace router amqp://amqp://SOLACE_HOST:AMQP_PORT...
 Connected with username 'clientUsername'.
 Sending message 'Hello world Queues!' to queue 'Q/tutorial'...
