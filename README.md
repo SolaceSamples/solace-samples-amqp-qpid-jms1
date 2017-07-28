@@ -13,7 +13,7 @@ In addition to information provided on the Solace [Developer Portal](http://dev.
 The "Getting Started" tutorials will get you up to speed and sending messages with Solace technology as quickly as possible. There are two ways you can get started:
 
 - If your company has Solace message routers deployed, contact your middleware team to obtain the host name or IP address of a Solace message router to test against, a username and password to access it, and a VPN in which you can produce and consume messages.
-- If you do not have access to a Solace message router, you will need to go through the â€œ[Set up a VMR](http://docs.solace.com/Solace-VMR-Set-Up/Setting-Up-VMRs.htm)â€� tutorial to download and install the software.
+- If you do not have access to a Solace message router, you will need to go through the [Set up a VMR](http://docs.solace.com/Solace-VMR-Set-Up/Setting-Up-VMRs.htm) tutorial to download and install the software.
 
 ## Contents
 
