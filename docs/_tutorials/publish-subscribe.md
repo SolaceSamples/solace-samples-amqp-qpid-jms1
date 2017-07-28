@@ -78,7 +78,25 @@ This tutorial focuses on using [JMS 1.1 (April 12, 2002)]({{ site.links-jms1-spe
 
 This tutorial assumes you have downloaded and successfully installed the [Apache Qpid JMS client](https://qpid.apache.org/components/jms/index.html). If your environment differs from the example, then adjust the build instructions appropriately.
 
-The easiest way to install it is through Maven. See the project's *pom.xml* file for details.
+The easiest way to install it is through Gradle or Maven.
+
+### Get the API: Using Gradle
+
+```
+dependencies {
+    compile("org.apache.qpid:qpid-jms-client:0.23.+")
+}
+```
+
+### Get the API: Using Maven
+
+```
+<dependency>
+    <groupId>org.apache.qpid</groupId>
+    <artifactId>qpid-jms-client</artifactId>
+    <version>[0.23,)</version>
+</dependency>
+```
 
 ## Connecting to the Solace Message Router
 
@@ -187,28 +205,13 @@ cd {{ site.baseurl | remove: '/'}}
 
 ### Building
 
-You can build and run both example files directly from Eclipse.
-
-If you prefer to use the command line, build a jar file that includes all dependencies by executing the following:
-
-```sh
-mvn compile
-mvn assembly:single
-```
-or
+You can build and run both example files directly from Eclipse or with Gradle.
 
 ```sh
 ./gradlew assemble
 ```
 
 The examples can be run as:
-
-```sh
-java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencies.jar  com.solace.samples.TopicSubscriber amqp://SOLACE_HOST:AMQP_PORT
-java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencies.jar  com.solace.samples.TopicPublisher amqp://SOLACE_HOST:AMQP_PORT
-```
-
-or
 
 ```sh
 cd build/staged/bin
@@ -221,7 +224,7 @@ cd build/staged/bin
 First start the `TopicSubscriber` so that it is up and waiting for published messages. You can start multiple instances of this application, and all of them will receive published messages.
 
 ```sh
-$ java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencies.jar  com.solace.samples.TopicSubscriber amqp://SOLACE_HOST:AMQP_PORT
+$ topicSubscriber amqp://SOLACE_HOST:AMQP_PORT
 TopicSubscriber is connecting to Solace router amqp://SOLACE_HOST:AMQP_PORT...
 Connected to the Solace router.
 Awaiting message...
@@ -229,7 +232,7 @@ Awaiting message...
 
 Then you can start the `TopicPublisher` to publish a message.
 ```sh
-$  java -cp ./target/solace-samples-amqp-jms1-1.0.1-SNAPSHOT-jar-with-dependencies.jar com.solace.samples.TopicPublisher amqp://SOLACE_HOST:AMQP_PORT
+$ topicPublisher amqp://SOLACE_HOST:AMQP_PORT
 TopicPublisher is connecting to Solace router amqp://SOLACE_HOST:AMQP_PORT...
 Connected to the Solace router.
 Sending message 'Hello world!' to topic 'T/GettingStarted/pubsub'...
