@@ -5,7 +5,7 @@ summary: Demonstrates the request/reply message exchange pattern
 icon: request-reply-icon.png
 ---
 
-This tutorial builds on the basic concepts introduced in the  , and will show you how to send a request, reply to it, and receive the reply. This the request/reply message exchange pattern as illustrated here:
+This tutorial builds on the basic concepts introduced in the [publish/subscribe tutorial]({{ site.baseurl }}/publish-subscribe){:target="_blank"}, and will show you how to send a request, reply to it, and receive the reply with Apache Qpid JMS 1.1 client using AMQP and Solace Message Router. This the request/reply message exchange pattern as illustrated here:
 
 ![Sample Image Text]({{ site.baseurl }}/images/request-reply-icon.png)
 
@@ -29,7 +29,7 @@ One simple way to get access to a Solace message router is to start a Solace VMR
 
 ## Goals
 
-The goal of this tutorial is to demonstrate how to use JMS 1.1 API over AMQP using the Solace Message Router. This tutorial will show you:
+The goal of this tutorial is to demonstrate how to use Apache Qpid JMS 1.1 over AMQP using the Solace Message Router. This tutorial will show you:
 
 1. How to build and send a request message
 2. How to receive a request message and respond to it
@@ -76,7 +76,7 @@ The last (Oracle docs) link points you to the JEE official tutorials which provi
 
 This tutorial focuses on using [JMS 1.1 (April 12, 2002)]({{ site.links-jms1-specification }}){:target="_blank"}, for [JMS 2.0 (May 21, 2013)]({{ site.links-jms2-specification }}){:target="_blank"} see [Solace Getting Started AMQP JMS 2.0 Tutorials]({{ site.links-get-started-amqp-jms2 }}){:target="_blank"}.
 
-## Obtaining JMS 1.1 API
+## Obtaining Apache Qpid JMS 1.1
 
 This tutorial assumes you have downloaded and successfully installed the [Apache Qpid JMS client](https://qpid.apache.org/components/jms/index.html). If your environment differs from the example, then adjust the build instructions appropriately.
 
@@ -299,6 +299,6 @@ Received request, responding...
 Responded successfully. Exiting...
 ```
 
-Now you know how to use JMS 1.1 API over AMQP using the Solace Message Router to implement the request/reply message exchange pattern.
+Now you know how to use Apache Qpid JMS 1.1 over AMQP using the Solace Message Router to implement the request/reply message exchange pattern.
 
 If you have any issues sending and receiving request or reply, check the [Solace community]({{ site.links-community }}){:target="_top"} for answers to common issues seen.

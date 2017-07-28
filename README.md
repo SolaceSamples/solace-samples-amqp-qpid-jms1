@@ -1,6 +1,6 @@
 # Getting Started Tutorials
 
-## Using JMS 1.1 over AMQP 1.0 with Solace Message Routers
+## Using Apache Qpid JMS 1.1 over AMQP 1.0 with Solace Message Routers
 
 The Advanced Message Queuing Protocol (AMQP) is an open standard application layer protocol for message-oriented middleware, and Solace Message Routers support AMQP 1.0.
 

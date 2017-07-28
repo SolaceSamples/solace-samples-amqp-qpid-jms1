@@ -18,7 +18,7 @@
  */
 
 /**
- *  Solace AMQP JMS 1.1 Examples: BasicReplier
+ *  Apache Qpid JMS 1.1 Solace AMQP Examples: BasicReplier
  */
 
 package com.solace.samples;
@@ -42,7 +42,7 @@ import javax.jms.TextMessage;
 import javax.jms.Topic;
 
 /**
- * Receives a request message using JMS 1.1 API over AMQP 1.0 and replies to it. Solace Message Router is used as the
+ * Receives a request message using Apache Qpid JMS 1.1 API over AMQP 1.0 and replies to it. Solace Message Router is used as the
  * message broker.
  * 
  * This is the Replier in the Request/Reply messaging pattern.

@@ -18,7 +18,7 @@
  */
 
 /**
- *  Solace AMQP JMS 1.1 Examples: BasicRequestor
+ *  Apache Qpid JMS 1.1 Solace AMQP Examples: BasicRequestor
  */
 
 package com.solace.samples;
@@ -38,7 +38,7 @@ import javax.jms.TextMessage;
 import javax.jms.Topic;
 
 /**
- * Sends a request message using JMS 1.1 API over AMQP 1.0 and receives a reply to it. Solace Message Router is used as
+ * Sends a request message using Apache Qpid JMS 1.1 API over AMQP 1.0 and receives a reply to it. Solace Message Router is used as
  * the message broker.
  * 
  * This is the Requestor in the Request/Reply messaging pattern.

@@ -5,7 +5,7 @@ summary: Demonstrates the publish/subscribe message exchange pattern
 icon: publish-subscribe-icon.png
 ---
 
-This tutorial will show you to how to connect a JMS 1.1 API client to a Solace Message Router using AMQP, add a topic subscription and publish a message matching this topic subscription. This is the publish/subscribe message exchange pattern as illustrated here:
+This tutorial will show you to how to connect a Apache Qpid JMS 1.1 client to a Solace Message Router using AMQP, add a topic subscription and publish a message matching this topic subscription. This is the publish/subscribe message exchange pattern as illustrated here:
 
 ![Sample Image Text]({{ site.baseurl }}/images/publish-subscribe-icon.png)
 
@@ -28,7 +28,7 @@ One simple way to get access to a Solace message router is to start a Solace VMR
 
 ## Goals
 
-The goal of this tutorial is to demonstrate how to use a JMS 1.1 API over AMQP using the Solace Message Router. This tutorial will show you:
+The goal of this tutorial is to demonstrate how to use a Apache Qpid JMS 1.1 over AMQP using the Solace Message Router. This tutorial will show you:
 
 1. How to build and send a message on a topic
 2. How to subscribe to a topic and receive a message
@@ -74,7 +74,7 @@ The last (Oracle docs) link points you to the JEE official tutorials which provi
 
 This tutorial focuses on using [JMS 1.1 (April 12, 2002)]({{ site.links-jms1-specification }}){:target="_blank"}, for [JMS 2.0 (May 21, 2013)]({{ site.links-jms2-specification }}){:target="_blank"} see [Solace Getting Started AMQP JMS 2.0 Tutorials]({{ site.links-get-started-amqp-jms2 }}){:target="_blank"}.
 
-## Obtaining JMS 1.1 API
+## Obtaining Apache Qpid JMS 1.1
 
 This tutorial assumes you have downloaded and successfully installed the [Apache Qpid JMS client](https://qpid.apache.org/components/jms/index.html). If your environment differs from the example, then adjust the build instructions appropriately.
 
@@ -248,6 +248,6 @@ Message Content:
 JmsTextMessage { org.apache.qpid.jms.provider.amqp.message.AmqpJmsTextMessageFacade@18c1752a }
 ```
 
-With that you now know how to use the JMS 1.1 API over AMQP using the Solace Message Router to implement the publish/subscribe message exchange pattern.
+With that you now know how to use the Apache Qpid JMS 1.1 over AMQP using the Solace Message Router to implement the publish/subscribe message exchange pattern.
 
 If you have any issues with publishing and receiving messages, check the [Solace community]({{ site.links-community }}){:target="_top"} for answers to common issues seen.
