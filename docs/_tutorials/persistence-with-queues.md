@@ -147,7 +147,7 @@ See [Management Tools]({{ site.docs-management-tools }}){:target="_top"} for oth
 final String QUEUE_NAME = "Q/tutorial";
 
 Queue queue = session.createQueue(QUEUE_NAME);
-MessageProducer messageProducer = session.createProducer(queue);
+MessageProducer messageProducer = session.createProducer(null);
 ```
 
 Now send the message:

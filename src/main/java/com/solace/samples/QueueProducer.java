@@ -35,8 +35,8 @@ import javax.jms.TextMessage;
 import javax.jms.Queue;
 
 /**
- * Sends a persistent message to a queue using Apache Qpid JMS 1.1 API over AMQP 1.0. Solace Message Router is used as the message
- * broker.
+ * Sends a persistent message to a queue using Apache Qpid JMS 1.1 API over AMQP 1.0. Solace Message Router is used as
+ * the message broker.
  * 
  * The queue used for messages is created on the message broker.
  */
@@ -67,8 +67,8 @@ public class QueueProducer {
         // or the QueueConsumer
         Queue queue = session.createQueue(QUEUE_NAME);
 
-        // Create the message producer for the created queue
-        MessageProducer messageProducer = session.createProducer(queue);
+        // Create the message producer
+        MessageProducer messageProducer = session.createProducer(null);
 
         // Create a text message.
         TextMessage message = session.createTextMessage("Hello world Queues!");

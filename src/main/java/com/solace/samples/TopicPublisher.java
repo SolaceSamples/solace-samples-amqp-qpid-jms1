@@ -34,7 +34,8 @@ import javax.jms.Topic;
 import org.apache.qpid.jms.JmsConnectionFactory;
 
 /**
- * Publishes a messages to a topic using Apache Qpid JMS 1.1 API over AMQP 1.0. Solace Message Router is used as the message broker.
+ * Publishes a messages to a topic using Apache Qpid JMS 1.1 API over AMQP 1.0. Solace Message Router is used as the
+ * message broker.
  * 
  * This is the Publisher in the Publish/Subscribe messaging pattern.
  */
@@ -63,8 +64,8 @@ public class TopicPublisher {
         // Create the publishing topic programmatically
         Topic topic = session.createTopic(TOPIC_NAME);
 
-        // Create the message producer for the created topic
-        MessageProducer messageProducer = session.createProducer(topic);
+        // Create the message producer
+        MessageProducer messageProducer = session.createProducer(null);
 
         // Create the message
         TextMessage message = session.createTextMessage("Hello world!");

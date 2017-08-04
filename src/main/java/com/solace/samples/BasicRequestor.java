@@ -38,8 +38,8 @@ import javax.jms.TextMessage;
 import javax.jms.Topic;
 
 /**
- * Sends a request message using Apache Qpid JMS 1.1 API over AMQP 1.0 and receives a reply to it. Solace Message Router is used as
- * the message broker.
+ * Sends a request message using Apache Qpid JMS 1.1 API over AMQP 1.0 and receives a reply to it. Solace Message Router
+ * is used as the message broker.
  * 
  * This is the Requestor in the Request/Reply messaging pattern.
  */
@@ -70,8 +70,8 @@ public class BasicRequestor {
         // Create the request topic programmatically
         Topic requestTopic = session.createTopic(REQUEST_TOPIC_NAME);
 
-        // Create the message producer for the created queue
-        MessageProducer requestProducer = session.createProducer(requestTopic);
+        // Create the message producer
+        MessageProducer requestProducer = session.createProducer(null);
 
         // The response will be received on this temporary queue.
         TemporaryQueue replyToQueue = session.createTemporaryQueue();
