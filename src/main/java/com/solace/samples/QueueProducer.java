@@ -35,8 +35,8 @@ import javax.jms.TextMessage;
 import javax.jms.Queue;
 
 /**
- * Sends a persistent message to a queue using Apache Qpid JMS 1.1 API over AMQP 1.0. Solace Message Router is used as the message
- * broker.
+ * Sends a persistent message to a queue using Apache Qpid JMS 1.1 API over AMQP 1.0. Solace Message Router is used as
+ * the message broker.
  * 
  * The queue used for messages is created on the message broker.
  */
@@ -77,7 +77,7 @@ public class QueueProducer {
 
         // Send the message
         // NOTE: JMS Message Priority is not supported by the Solace Message Bus
-        messageProducer.send(queue, message, DeliveryMode.PERSISTENT, Message.DEFAULT_PRIORITY,
+        messageProducer.send(message, DeliveryMode.PERSISTENT, Message.DEFAULT_PRIORITY,
                 Message.DEFAULT_TIME_TO_LIVE);
 
         System.out.println("Sent successfully. Exiting...");

@@ -155,7 +155,7 @@ Now send the message:
 *QueueProducer.java*
 ```java
 TextMessage message = session.createTextMessage("Hello world Queues!");
-messageProducer.send(queue, message, DeliveryMode.PERSISTENT, Message.DEFAULT_PRIORITY, Message.DEFAULT_TIME_TO_LIVE);
+messageProducer.send(message, DeliveryMode.PERSISTENT, Message.DEFAULT_PRIORITY, Message.DEFAULT_TIME_TO_LIVE);
 ```
 
 ## Receiving a persistent message from a queue

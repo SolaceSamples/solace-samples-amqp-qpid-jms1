@@ -140,7 +140,7 @@ Now we can publish the message.
 *TopicPublisher.java*
 ```java
 TextMessage message = session.createTextMessage("Hello world!");
-messageProducer.send(topic, message,
+messageProducer.send(message,
         DeliveryMode.NON_PERSISTENT,
         Message.DEFAULT_PRIORITY, Message.DEFAULT_TIME_TO_LIVE);
 ```

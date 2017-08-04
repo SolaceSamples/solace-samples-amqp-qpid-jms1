@@ -38,8 +38,8 @@ import javax.jms.TextMessage;
 import javax.jms.Topic;
 
 /**
- * Sends a request message using Apache Qpid JMS 1.1 API over AMQP 1.0 and receives a reply to it. Solace Message Router is used as
- * the message broker.
+ * Sends a request message using Apache Qpid JMS 1.1 API over AMQP 1.0 and receives a reply to it. Solace Message Router
+ * is used as the message broker.
  * 
  * This is the Requestor in the Request/Reply messaging pattern.
  */
@@ -93,7 +93,7 @@ public class BasicRequestor {
         System.out.printf("Sending request '%s' to topic '%s'...%n", request.getText(), requestTopic.toString());
 
         // Send the request
-        requestProducer.send(requestTopic, request, DeliveryMode.NON_PERSISTENT,
+        requestProducer.send(request, DeliveryMode.NON_PERSISTENT,
                 Message.DEFAULT_PRIORITY,
                 Message.DEFAULT_TIME_TO_LIVE);
 
