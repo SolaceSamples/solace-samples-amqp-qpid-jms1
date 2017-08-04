@@ -147,7 +147,7 @@ See [Management Tools]({{ site.docs-management-tools }}){:target="_top"} for oth
 final String QUEUE_NAME = "Q/tutorial";
 
 Queue queue = session.createQueue(QUEUE_NAME);
-MessageProducer messageProducer = session.createProducer(queue);
+MessageProducer messageProducer = session.createProducer(null);
 ```
 
 Now send the message:
@@ -155,7 +155,7 @@ Now send the message:
 *QueueProducer.java*
 ```java
 TextMessage message = session.createTextMessage("Hello world Queues!");
-messageProducer.send(message, DeliveryMode.PERSISTENT, Message.DEFAULT_PRIORITY, Message.DEFAULT_TIME_TO_LIVE);
+messageProducer.send(queue, message, DeliveryMode.PERSISTENT, Message.DEFAULT_PRIORITY, Message.DEFAULT_TIME_TO_LIVE);
 ```
 
 ## Receiving a persistent message from a queue

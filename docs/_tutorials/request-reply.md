@@ -128,7 +128,7 @@ In order to send a request in the *Requestor* a JMS *MessageProducer* needs to b
 final String REQUEST_TOPIC_NAME = "T/GettingStarted/requests";
 
 Topic requestTopic = session.createTopic(REQUEST_TOPIC_NAME);
-MessageProducer requestProducer = session.createProducer(requestTopic);
+MessageProducer requestProducer = session.createProducer(null);
 ```
 
 Also, it is necessary to allocate a temporary queue for receiving the reply and to create a JMS *MessageConsumer* for it.
@@ -162,7 +162,7 @@ Now send the request:
 
 *BasicRequestor.java*
 ```java
-requestProducer.send(request, DeliveryMode.NON_PERSISTENT,
+requestProducer.send(requestTopic, request, DeliveryMode.NON_PERSISTENT,
         Message.DEFAULT_PRIORITY,
         Message.DEFAULT_TIME_TO_LIVE);
 ```

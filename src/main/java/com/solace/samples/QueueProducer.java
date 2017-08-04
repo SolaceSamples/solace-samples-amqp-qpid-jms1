@@ -67,8 +67,8 @@ public class QueueProducer {
         // or the QueueConsumer
         Queue queue = session.createQueue(QUEUE_NAME);
 
-        // Create the message producer for the created queue
-        MessageProducer messageProducer = session.createProducer(queue);
+        // Create the message producer
+        MessageProducer messageProducer = session.createProducer(null);
 
         // Create a text message.
         TextMessage message = session.createTextMessage("Hello world Queues!");
@@ -77,7 +77,7 @@ public class QueueProducer {
 
         // Send the message
         // NOTE: JMS Message Priority is not supported by the Solace Message Bus
-        messageProducer.send(message, DeliveryMode.PERSISTENT, Message.DEFAULT_PRIORITY,
+        messageProducer.send(queue, message, DeliveryMode.PERSISTENT, Message.DEFAULT_PRIORITY,
                 Message.DEFAULT_TIME_TO_LIVE);
 
         System.out.println("Sent successfully. Exiting...");

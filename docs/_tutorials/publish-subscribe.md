@@ -132,7 +132,7 @@ In order to publish a message to a topic a JMS message *MessageProducer* needs t
 ```java
 final String TOPIC_NAME = "T/GettingStarted/pubsub";
 Topic topic = session.createTopic(TOPIC_NAME);
-MessageProducer messageProducer = session.createProducer(topic);
+MessageProducer messageProducer = session.createProducer(null);
 ```
 
 Now we can publish the message.
@@ -140,7 +140,7 @@ Now we can publish the message.
 *TopicPublisher.java*
 ```java
 TextMessage message = session.createTextMessage("Hello world!");
-messageProducer.send(message,
+messageProducer.send(topic, message,
         DeliveryMode.NON_PERSISTENT,
         Message.DEFAULT_PRIORITY, Message.DEFAULT_TIME_TO_LIVE);
 ```
