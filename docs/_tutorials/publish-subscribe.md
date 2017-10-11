@@ -72,7 +72,7 @@ JMS is a standard API for sending and receiving messages. As such, in addition t
 
 The last (Oracle docs) link points you to the JEE official tutorials which provide a good introduction to JMS.
 
-This tutorial focuses on using [JMS 1.1 (April 12, 2002)]({{ site.links-jms1-specification }}){:target="_blank"}, for [JMS 2.0 (May 21, 2013)]({{ site.links-jms2-specification }}){:target="_blank"} see [Solace Getting Started AMQP JMS 2.0 Tutorials]({{ site.links-get-started-amqp-jms2 }}){:target="_blank"}.
+This tutorial focuses on using [JMS 1.1 (April 12, 2002)]({{ site.links-jms1-specification }}){:target="_blank"}, for [JMS 2.0 (May 21, 2013)]({{ site.links-jms2-specification }}){:target="_blank"} see [Solace Getting Started AMQP JMS 2.0 Tutorials]({{ site.links-get-started-amqp-tutorials-jms2 }}){:target="_blank"}.
 
 ## Obtaining Apache Qpid JMS 1.1
 
