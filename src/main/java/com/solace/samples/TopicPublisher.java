@@ -47,7 +47,7 @@ public class TopicPublisher {
         String solaceHost = args[0];
         String solaceUsername = args[1];
         String solacePassword = args[2];
-        System.out.printf("TopicPublisher is connecting to Solace router %s as user %s...%n", solaceHost);
+        System.out.printf("TopicPublisher is connecting to Solace router %s...%n", solaceHost);
 
         // Programmatically create the connection factory using default settings
         ConnectionFactory connectionFactory = new JmsConnectionFactory(solaceUsername, solacePassword, solaceHost);
