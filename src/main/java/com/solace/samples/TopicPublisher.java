@@ -41,9 +41,6 @@ import org.apache.qpid.jms.JmsConnectionFactory;
  */
 public class TopicPublisher {
 
-    final String SOLACE_USERNAME = "clientUsername";
-    final String SOLACE_PASSWORD = "password";
-
     final String TOPIC_NAME = "T/GettingStarted/pubsub";
 
     private void run(String... args) throws Exception {
