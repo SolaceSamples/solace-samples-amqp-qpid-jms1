@@ -45,9 +45,6 @@ import org.apache.qpid.jms.JmsConnectionFactory;
  */
 public class TopicSubscriber {
 
-    final String SOLACE_USERNAME = "clientUsername";
-    final String SOLACE_PASSWORD = "password";
-
     final String TOPIC_NAME = "T/GettingStarted/pubsub";
 
     // Latch used for synchronizing between threads
@@ -55,10 +52,12 @@ public class TopicSubscriber {
 
     private void run(String... args) throws Exception {
         String solaceHost = args[0];
+        String solaceUsername = args[1];
+        String solacePassword = args[2];
         System.out.printf("TopicSubscriber is connecting to Solace router %s...%n", solaceHost);
 
         // Programmatically create the connection factory using default settings
-        ConnectionFactory connectionFactory = new JmsConnectionFactory(SOLACE_USERNAME, SOLACE_PASSWORD, solaceHost);
+        ConnectionFactory connectionFactory = new JmsConnectionFactory(solaceUsername, solacePassword, solaceHost);
 
         // Create connection to the Solace router
         Connection connection = connectionFactory.createConnection();
@@ -66,7 +65,7 @@ public class TopicSubscriber {
         // Create a non-transacted, Auto ACK session.
         Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
-        System.out.printf("Connected to the Solace router with client username '%s'.%n", SOLACE_USERNAME);
+        System.out.printf("Connected to the Solace router with client username '%s'.%n", solaceUsername);
 
         // Create the subscription topic programmatically
         Topic topic = session.createTopic(TOPIC_NAME);
@@ -109,8 +108,8 @@ public class TopicSubscriber {
     }
 
     public static void main(String[] args) throws Exception {
-        if (args.length < 1) {
-            System.out.println("Usage: TopicSubscriber amqp://<msg_backbone_ip:amqp_port>");
+        if (args.length < 3) {
+            System.out.println("Usage: TopicSubscriber amqp://<msg_backbone_ip:amqp_port> <username> <password>");
             System.exit(-1);
         }
         new TopicSubscriber().run(args);

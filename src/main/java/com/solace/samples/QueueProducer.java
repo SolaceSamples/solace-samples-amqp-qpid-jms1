@@ -42,17 +42,17 @@ import javax.jms.Queue;
  */
 public class QueueProducer {
 
-    final String SOLACE_USERNAME = "clientUsername";
-    final String SOLACE_PASSWORD = "password";
-
     final String QUEUE_NAME = "Q/tutorial";
 
     private void run(String... args) throws Exception {
         String solaceHost = args[0];
+        String solaceUsername = args[1];
+        String solacePassword = args[2];
+
         System.out.printf("QueueProducer is connecting to Solace router %s...%n", solaceHost);
 
         // Programmatically create the connection factory using default settings
-        ConnectionFactory connectionFactory = new JmsConnectionFactory(SOLACE_USERNAME, SOLACE_PASSWORD,
+        ConnectionFactory connectionFactory = new JmsConnectionFactory(solaceUsername, solacePassword,
                 solaceHost);
 
         // Create connection to the Solace router
@@ -61,7 +61,7 @@ public class QueueProducer {
         // Create a non-transacted, auto ACK session.
         Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
-        System.out.printf("Connected with username '%s'.%n", SOLACE_USERNAME);
+        System.out.printf("Connected with username '%s'.%n", solaceUsername);
 
         // NOTE: this durable queue must already exist on the router, created by the administrator
         // or the QueueConsumer
@@ -92,8 +92,8 @@ public class QueueProducer {
     }
 
     public static void main(String[] args) throws Exception {
-        if (args.length < 1) {
-            System.out.println("Usage: QueueProducer amqp://<msg_backbone_ip:amqp_port>");
+        if (args.length < 3) {
+            System.out.println("Usage: QueueProducer amqp://<msg_backbone_ip:amqp_port> <username> <password>");
             System.exit(-1);
         }
         new QueueProducer().run(args);

@@ -45,9 +45,6 @@ import javax.jms.Queue;
  */
 public class QueueConsumer {
 
-    final String SOLACE_USERNAME = "clientUsername";
-    final String SOLACE_PASSWORD = "password";
-
     final String QUEUE_NAME = "Q/tutorial";
 
     // Latch used for synchronizing between threads
@@ -55,10 +52,12 @@ public class QueueConsumer {
 
     private void run(String... args) throws Exception {
         String solaceHost = args[0];
+        String solaceUsername = args[1];
+        String solacePassword = args[2];
         System.out.printf("QueueConsumer is connecting to Solace router %s...%n", solaceHost);
 
         // Programmatically create the connection factory using default settings
-        ConnectionFactory connectionFactory = new JmsConnectionFactory(SOLACE_USERNAME, SOLACE_PASSWORD, solaceHost);
+        ConnectionFactory connectionFactory = new JmsConnectionFactory(solaceUsername, solacePassword, solaceHost);
 
         // Create connection to the Solace router
         Connection connection = connectionFactory.createConnection();
@@ -66,7 +65,7 @@ public class QueueConsumer {
         // Create a non-transacted, client ACK session.
         Session session = connection.createSession(false, Session.CLIENT_ACKNOWLEDGE);
 
-        System.out.printf("Connected with username '%s'.%n", SOLACE_USERNAME);
+        System.out.printf("Connected with username '%s'.%n", solaceUsername);
 
         // Create the queue programmatically and the corresponding router resource
         Queue queue = session.createQueue(QUEUE_NAME);
@@ -113,8 +112,8 @@ public class QueueConsumer {
     }
 
     public static void main(String[] args) throws Exception {
-        if (args.length < 1) {
-            System.out.println("Usage: QueueConsumer amqp://<msg_backbone_ip:amqp_port>");
+        if (args.length < 3) {
+            System.out.println("Usage: QueueConsumer amqp://<msg_backbone_ip:amqp_port> <username> <password>");
             System.exit(-1);
         }
         new QueueConsumer().run(args);
