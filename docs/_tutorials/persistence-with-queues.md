@@ -3,9 +3,15 @@ layout: tutorials
 title: Persistence with Queues
 summary: Demonstrates persistent messages for guaranteed delivery.
 icon: I_dev_Persistent.svg
+links:
+    - label: QueueProducer.java
+      link: /blob/master/src/main/java/com/solace/samples/QueueProducer.java
+    - label: QueueConsumber.java
+      link: /blob/master/src/main/java/com/solace/samples/QueueConsumer.java
+      
 ---
 
-This tutorial builds on the basic concepts introduced in the [publish/subscribe tutorial]({{ site.baseurl }}/publish-subscribe){:target="_blank"}, and will show you how to send and receive persistent messages with Apache Qpid JMS 1.1 client using AMQP and Solace Message Router.
+This tutorial builds on the basic concepts introduced in the [publish/subscribe tutorial]({{ site.baseurl }}/publish-subscribe), and will show you how to send and receive persistent messages from a Solace message router queue in a point to point fashion.
 
 This tutorial is available in [GitHub]({{ site.repository }}){:target="_blank"} along with the other [Solace Getting Started AMQP Tutorials]({{ site.links-get-started-amqp }}){:target="_top"}.
 
@@ -18,12 +24,16 @@ This tutorial focuses on using a non-Solace JMS API implementation. For using th
 This tutorial assumes the following:
 
 * You are familiar with Solace [core concepts]({{ site.docs-core-concepts }}){:target="_top"}.
-* You have access to a running Solace message router with the following configuration:
-    * Enabled `default` message VPN
-    * Enabled `default` client username
-    * Enabled `default` client profile with guaranteed messaging permissions.
+* You have access to Solace messaging with the following configuration details:
+    * Connectivity information for a Solace message-VPN configured for guaranteed messaging support
+    * Enabled client username and password
+    * Client-profile enabled with guaranteed messaging permissions.
 
-One simple way to get access to a Solace message router is to start a Solace VMR load [as outlined here]({{ site.docs-vmr-setup }}){:target="_top"}. By default the Solace VMR will run with the `default` message VPN configured and ready for messaging. Going forward, this tutorial assumes that you are using the Solace VMR. If you are using a different Solace message router configuration, adapt the instructions to match your configuration.
+{% if jekyll.environment == 'solaceCloud' %}
+One simple way to get access to Solace messaging quickly is to create a messaging service in Solace Cloud [as outlined here]({{ site.links-solaceCloud-setup}}){:target="_top"}. You can find other ways to get access to Solace messaging on the [home page]({{ site.baseurl }}/) of these tutorials.
+{% else %}
+One simple way to get access to a Solace message router is to start a Solace VMR load [as outlined here]({{ site.docs-vmr-setup }}){:target="_top"}. By default the Solace VMR will with the “default” message VPN configured and ready for guaranteed messaging. Going forward, this tutorial assumes that you are using the Solace VMR. If you are using a different Solace message router configuration adapt the tutorial appropriately to match your configuration.
+{% endif %}
 
 ## Goals
 
@@ -32,34 +42,12 @@ The goal of this tutorial is to demonstrate how to use Apache Qpid JMS 1.1 over 
 1.  How to send a persistent message to a durable queue on the Solace message router
 2.  How to bind to this queue and receive a persistent message
 
-## Solace message router properties
-
-In order to send or receive messages to a Solace message router, you need to know a few details of how to connect to the Solace message router. Specifically you need to know the following:
-
-<table>
-<tbody>
-<tr>
-<th>Resource</th>
-<th>Value</th>
-<th>Description</th>
-</tr>
-<tr>
-<td>Host</td>
-<td>String of the form <code>DNS name</code> or <code>IP:Port</code></td>
-<td>This is the address client’s use when connecting to the Solace Message Router to send and receive messages. For a Solace VMR this there is only a single interface so the IP is the same as the management IP address. For Solace message router appliances this is the host address of the message-backbone. The port number must match the port number for the plain text AMQP service on the router.</td>
-</tr>
-<tr>
-<td>Message VPN</td>
-<td>String</td>
-<td>The `default` Solace message router Message VPN that this client will connect to.</td>
-</tr>
-<tr>
-<td>Client Username</td>
-<td>String</td>
-<td>The `default` client username.</td>
-</tr>
-</tbody>
-</table>
+{% if jekyll.environment == 'solaceCloud' %}
+  {% include solaceMessaging-cloud.md %}
+{% else %}
+    {% include solaceMessaging.md %}
+{% endif %}  
+{% include jmsApi.md %}
 
 ## Java Messaging Service (JMS) Introduction
 
@@ -73,30 +61,6 @@ The last (Oracle docs) link points you to the JEE official tutorials which provi
 
 This tutorial focuses on using [JMS 1.1 (April 12, 2002)]({{ site.links-jms1-specification }}){:target="_blank"}, for [JMS 2.0 (May 21, 2013)]({{ site.links-jms2-specification }}){:target="_blank"} see [Solace Getting Started AMQP JMS 2.0 Tutorials]({{ site.links-get-started-amqp-jms2 }}){:target="_blank"}.
 
-## Obtaining Apache Qpid JMS 1.1
-
-This tutorial assumes you have downloaded and successfully installed the [Apache Qpid JMS client](https://qpid.apache.org/components/jms/index.html). If your environment differs from the example, then adjust the build instructions appropriately.
-
-The easiest way to install it is through Gradle or Maven.
-
-### Get the API: Using Gradle
-
-```
-dependencies {
-    compile("org.apache.qpid:qpid-jms-client:0.23.+")
-}
-```
-
-### Get the API: Using Maven
-
-```
-<dependency>
-    <groupId>org.apache.qpid</groupId>
-    <artifactId>qpid-jms-client</artifactId>
-    <version>[0.23,)</version>
-</dependency>
-```
-
 ## Connecting to the Solace Message Router
 
 In order to send or receive messages, an application must start a JMS connection.
@@ -105,10 +69,8 @@ For establishing the JMS connection you need to know the Solace Message Router h
 
 *QueueProducer.java/QueueConsumer.java*
 ```java
-final String SOLACE_USERNAME = "clientUsername";
-final String SOLACE_PASSWORD = "password";
 
-ConnectionFactory connectionFactory = new JmsConnectionFactory(SOLACE_USERNAME, SOLACE_PASSWORD, solaceHost);
+ConnectionFactory connectionFactory = new JmsConnectionFactory(solaceUsername, solacePassword, solaceHost);
 Connection connection = connectionFactory.createConnection();
 ```
 
@@ -204,8 +166,11 @@ latch.await();
 
 Combining the example source code shown above results in the following source code files:
 
-*   [QueueProducer.java]({{ site.repository }}/blob/master/src/main/java/com/solace/samples/QueueProducer.java){:target="_blank"}
-*   [QueueConsumer.java]({{ site.repository }}/blob/master/src/main/java/com/solace/samples/QueueConsumer.java){:target="_blank"}
+<ul>
+{% for item in page.links %}
+<li><a href="{{ site.repository }}{{ item.link }}" target="_blank">{{ item.label }}</a></li>
+{% endfor %}
+</ul>
 
 ### Getting the Source
 
@@ -228,8 +193,8 @@ The examples can be run as:
 
 ```sh
 cd build/staged/bin
-./queueConsumer amqp://SOLACE_HOST:AMQP_PORT
-./queueProducer amqp://SOLACE_HOST:AMQP_PORT
+./queueConsumer amqp://<HOST:AMQP_PORT> <USERNAME> <PASSWORD>
+./queueProducer amqp://<HOST:AMQP_PORT> <USERNAME> <PASSWORD>
 ```
 
 ### Sample Output
@@ -237,16 +202,16 @@ cd build/staged/bin
 First start the `QueueConsumer` so that it is up and waiting for messages.
 
 ```sh
-$ queueConsumer amqp://SOLACE_HOST:AMQP_PORT
-QueueConsumer is connecting to Solace router amqp://SOLACE_HOST:AMQP_PORT...
+$ queueConsumer amqp://<HOST:AMQP_PORT> <USERNAME> <PASSWORD>
+QueueConsumer is connecting to Solace router amqp://<HOST:AMQP_PORT>...
 Awaiting message...
 ```
 
 Then you can start the `QueueProducer` to send the message.
 
 ```sh
-$ queueProducer amqp://SOLACE_HOST:AMQP_PORT
-QueueProducer is connecting to Solace router amqp://amqp://SOLACE_HOST:AMQP_PORT...
+$ queueProducer amqp://<HOST:AMQP_PORT> <USERNAME> <PASSWORD>
+QueueProducer is connecting to Solace router amqp://<HOST:AMQP_PORT>...
 Connected with username 'clientUsername'.
 Sending message 'Hello world Queues!' to queue 'Q/tutorial'...
 Sent successfully. Exiting...
