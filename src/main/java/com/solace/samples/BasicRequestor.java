@@ -38,7 +38,7 @@ import javax.jms.TextMessage;
 import javax.jms.Topic;
 
 /**
- * Sends a request message using Apache Qpid JMS 1.1 API over AMQP 1.0 and receives a reply to it. Solace Message Router
+ * Sends a request message using Apache Qpid JMS 1.1 API over AMQP 1.0 and receives a reply to it. Solace messaging
  * is used as the message broker.
  * 
  * This is the Requestor in the Request/Reply messaging pattern.
@@ -54,18 +54,18 @@ public class BasicRequestor {
         String solaceUsername = args[1];
         String solacePassword = args[2];
 
-        System.out.printf("BasicRequestor is connecting to Solace router %s...%n", solaceHost);
+        System.out.printf("BasicRequestor is connecting to Solace messaging at %s...%n", solaceHost);
 
         // Programmatically create the connection factory using default settings
         ConnectionFactory connectionFactory = new JmsConnectionFactory(solaceUsername, solacePassword, solaceHost);
 
-        // Create connection to the Solace router
+        // Create connection to the Solace messaging
         Connection connection = connectionFactory.createConnection();
 
         // Create a non-transacted, auto ACK session.
         Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
-        System.out.printf("Connected to the Solace router with client username '%s'.%n", solacePassword);
+        System.out.printf("Connected to the Solace messaging with client username '%s'.%n", solacePassword);
 
         // Create the request topic programmatically
         Topic requestTopic = session.createTopic(REQUEST_TOPIC_NAME);

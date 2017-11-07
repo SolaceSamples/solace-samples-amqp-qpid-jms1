@@ -1,7 +1,7 @@
 ---
 layout: tutorials
 title: Confirmed Delivery
-summary: Learn how to confirm that your messages are received by a Solace message router.
+summary: Learn how to confirm that your messages are received by Solace Messaging.
 icon: I_dev_confirm.svg
 ---
 

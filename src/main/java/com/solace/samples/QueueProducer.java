@@ -35,7 +35,7 @@ import javax.jms.TextMessage;
 import javax.jms.Queue;
 
 /**
- * Sends a persistent message to a queue using Apache Qpid JMS 1.1 API over AMQP 1.0. Solace Message Router is used as
+ * Sends a persistent message to a queue using Apache Qpid JMS 1.1 API over AMQP 1.0. Solace messaging is used as
  * the message broker.
  * 
  * The queue used for messages is created on the message broker.
@@ -49,13 +49,13 @@ public class QueueProducer {
         String solaceUsername = args[1];
         String solacePassword = args[2];
 
-        System.out.printf("QueueProducer is connecting to Solace router %s...%n", solaceHost);
+        System.out.printf("QueueProducer is connecting to Solace messaging at %s...%n", solaceHost);
 
         // Programmatically create the connection factory using default settings
         ConnectionFactory connectionFactory = new JmsConnectionFactory(solaceUsername, solacePassword,
                 solaceHost);
 
-        // Create connection to the Solace router
+        // Create connection to the Solace messaging
         Connection connection = connectionFactory.createConnection();
 
         // Create a non-transacted, auto ACK session.
@@ -63,7 +63,7 @@ public class QueueProducer {
 
         System.out.printf("Connected with username '%s'.%n", solaceUsername);
 
-        // NOTE: this durable queue must already exist on the router, created by the administrator
+        // NOTE: this durable queue must already exist on the messaging, created by the administrator
         // or the QueueConsumer
         Queue queue = session.createQueue(QUEUE_NAME);
 
