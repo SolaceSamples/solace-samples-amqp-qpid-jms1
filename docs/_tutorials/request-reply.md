@@ -35,7 +35,7 @@ One simple way to get access to a Solace message router is to start a Solace VMR
 
 ## Goals
 
-The goal of this tutorial is to demonstrate how to use Apache Qpid JMS 1.1 over AMQP using the Solace Message Router. This tutorial will show you:
+The goal of this tutorial is to demonstrate how to use Apache Qpid JMS 1.1 over AMQP using Solace messaging. This tutorial will show you:
 
 1. How to build and send a request message
 2. How to receive a request message and respond to it
@@ -59,7 +59,7 @@ The last (Oracle docs) link points you to the JEE official tutorials which provi
 
 This tutorial focuses on using [JMS 1.1 (April 12, 2002)]({{ site.links-jms1-specification }}){:target="_blank"}, for [JMS 2.0 (May 21, 2013)]({{ site.links-jms2-specification }}){:target="_blank"} see [Solace Getting Started AMQP JMS 2.0 Tutorials]({{ site.links-get-started-amqp-jms2 }}){:target="_blank"}.
 
-## Connecting to the Solace Message Router
+## Connecting to Solace Messaging
 
 As in the [publish/subscribe tutorial]({{ site.baseurl }}/publish-subscribe){:target="_blank"} tutorial, an application must start a JMS connection and a session.
 
@@ -71,7 +71,7 @@ Connection connection = connectionFactory.createConnection();
 Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 ```
 
-At this point the application is connected to the Solace Message Router and ready to send and receive request and reply messages.
+At this point the application is connected to Solace messaging and ready to send and receive request and reply messages.
 
 ## Sending a request
 
@@ -233,16 +233,16 @@ First start the `BasicReplier` so that it is up and waiting for requests.
 
 ```sh
 $ basicReplier amqp://<HOST:AMQP_PORT> <USERNAME> <PASSWORD>
-BasicReplier is connecting to Solace router amqp://<HOST:AMQP_PORT>...
-Connected to the Solace router with client username 'clientUsername'.
+BasicReplier is connecting to Solace messaging at amqp://<HOST:AMQP_PORT>...
+Connected to the Solace messaging with client username 'clientUsername'.
 Awaiting request...
 ```
 
 Then you can start the `BasicRequestor` to send the request and receive the reply.
 ```sh
 $ basicRequestor amqp://<HOST:AMQP_PORT> <USERNAME> <PASSWORD>
-BasicRequestor is connecting to Solace router amqp://<HOST:AMQP_PORT>...
-Connected to the Solace router with client username 'clientUsername'.
+BasicRequestor is connecting to Solace messaging at amqp://<HOST:AMQP_PORT>...
+Connected to the Solace messaging with client username 'clientUsername'.
 Sending request 'Sample Request' to topic 'T/GettingStarted/requests'...
 Sent successfully. Waiting for reply...
 TextMessage response received: 'Sample response'
@@ -258,6 +258,6 @@ Received request, responding...
 Responded successfully. Exiting...
 ```
 
-Now you know how to use Apache Qpid JMS 1.1 over AMQP using the Solace Message Router to implement the request/reply message exchange pattern.
+Now you know how to use Apache Qpid JMS 1.1 over AMQP using Solace messaging to implement the request/reply message exchange pattern.
 
 If you have any issues sending and receiving request or reply, check the [Solace community]({{ site.links-community }}){:target="_top"} for answers to common issues seen.

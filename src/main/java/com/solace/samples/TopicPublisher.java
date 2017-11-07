@@ -34,7 +34,7 @@ import javax.jms.Topic;
 import org.apache.qpid.jms.JmsConnectionFactory;
 
 /**
- * Publishes a messages to a topic using Apache Qpid JMS 1.1 API over AMQP 1.0. Solace Message Router is used as the
+ * Publishes a messages to a topic using Apache Qpid JMS 1.1 API over AMQP 1.0. Solace messaging is used as the
  * message broker.
  * 
  * This is the Publisher in the Publish/Subscribe messaging pattern.
@@ -47,18 +47,18 @@ public class TopicPublisher {
         String solaceHost = args[0];
         String solaceUsername = args[1];
         String solacePassword = args[2];
-        System.out.printf("TopicPublisher is connecting to Solace router %s...%n", solaceHost);
+        System.out.printf("TopicPublisher is connecting to Solace messaging at %s...%n", solaceHost);
 
         // Programmatically create the connection factory using default settings
         ConnectionFactory connectionFactory = new JmsConnectionFactory(solaceUsername, solacePassword, solaceHost);
 
-        // Create connection to the Solace router
+        // Create connection to the Solace messaging
         Connection connection = connectionFactory.createConnection();
 
         // Create a non-transacted, auto ACK session.
         Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
-        System.out.printf("Connected to the Solace router with client username '%s'.%n", SOLACE_USERNAME);
+        System.out.printf("Connected to the Solace messaging with client username '%s'.%n", solaceUsername);
 
         // Create the publishing topic programmatically
         Topic topic = session.createTopic(TOPIC_NAME);

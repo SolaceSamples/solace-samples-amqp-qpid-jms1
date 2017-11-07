@@ -35,7 +35,7 @@ One simple way to get access to a Solace message router is to start a Solace VMR
 
 ## Goals
 
-The goal of this tutorial is to demonstrate how to use a Apache Qpid JMS 1.1 over AMQP using the Solace Message Router. This tutorial will show you:
+The goal of this tutorial is to demonstrate how to use a Apache Qpid JMS 1.1 over AMQP using Solace messaging. This tutorial will show you:
 
 1. How to build and send a message on a topic
 2. How to subscribe to a topic and receive a message
@@ -59,11 +59,11 @@ The last (Oracle docs) link points you to the JEE official tutorials which provi
 
 This tutorial focuses on using [JMS 1.1 (April 12, 2002)]({{ site.links-jms1-specification }}){:target="_blank"}, for [JMS 2.0 (May 21, 2013)]({{ site.links-jms2-specification }}){:target="_blank"} see [Solace Getting Started AMQP JMS 2.0 Tutorials]({{ site.links-get-started-amqp-jms2 }}){:target="_blank"}.
 
-## Connecting to the Solace Message Router
+## Connecting to Solace Messaging
 
 In order to send or receive messages, an application must start a JMS connection.
 
-There are three parameters for establishing the JMS connection: the Solace Message Router host name with the AMQP service port number, the client username and the optional password.
+There are three parameters for establishing the JMS connection: the Solace messaging host name with the AMQP service port number, the client username and the optional password.
 
 *TopicPublisher.java/TopicSubscriber.java*
 ```java
@@ -79,7 +79,7 @@ Next, a session needs to be created. The session will be non-transacted using th
 Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 ```
 
-At this point the application is connected to the Solace Message Router and ready to publish messages.
+At this point the application is connected to Solace messaging and ready to publish messages.
 
 ## Publishing messages
 
@@ -187,16 +187,16 @@ First start the `TopicSubscriber` so that it is up and waiting for published mes
 
 ```sh
 $ topicSubscriber amqp://<HOST:AMQP_PORT> <USERNAME> <PASSWORD>
-TopicSubscriber is connecting to Solace router amqp://<HOST:AMQP_PORT>...
-Connected to the Solace router.
+TopicSubscriber is connecting to Solace messaging at amqp://<HOST:AMQP_PORT>...
+Connected to the Solace messaging.
 Awaiting message...
 ```
 
 Then you can start the `TopicPublisher` to publish a message.
 ```sh
 $ topicPublisher amqp://<HOST:AMQP_PORT> <USERNAME> <PASSWORD>
-TopicPublisher is connecting to Solace router amqp://<HOST:AMQP_PORT>...
-Connected to the Solace router.
+TopicPublisher is connecting to Solace messaging amqp://<HOST:AMQP_PORT>...
+Connected to the Solace messaging.
 Sending message 'Hello world!' to topic 'T/GettingStarted/pubsub'...
 Sent successfully. Exiting...
 ```
@@ -210,6 +210,6 @@ Message Content:
 JmsTextMessage { org.apache.qpid.jms.provider.amqp.message.AmqpJmsTextMessageFacade@18c1752a }
 ```
 
-With that you now know how to use the Apache Qpid JMS 1.1 over AMQP using the Solace Message Router to implement the publish/subscribe message exchange pattern.
+With that you now know how to use the Apache Qpid JMS 1.1 over AMQP using Solace messaging to implement the publish/subscribe message exchange pattern.
 
 If you have any issues with publishing and receiving messages, check the [Solace community]({{ site.links-community }}){:target="_top"} for answers to common issues seen.
