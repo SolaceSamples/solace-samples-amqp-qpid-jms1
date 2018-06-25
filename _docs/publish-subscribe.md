@@ -38,8 +38,8 @@ The goal of this tutorial is to demonstrate how to use a Apache Qpid JMS 1.1 ove
 1. How to build and send a message on a topic
 2. How to subscribe to a topic and receive a message
 
-{% include solaceMessaging.md %}
-{% include jmsApi.md %}
+{% include_relative assets/solaceMessaging.md %}
+{% include_relative assets/jmsApi.md %}
 
 ## Java Messaging Service (JMS) Introduction
 
@@ -84,7 +84,7 @@ At this point the application is connected to Solace messaging and ready to publ
 
 In order to publish a message to a topic a JMS message *MessageProducer* needs to be created.
 
-![]({{ site.baseurl }}/images/publish-subscribe-details-2.png)
+![]({{ site.baseurl }}/assets/images/publish-subscribe-details-2.png)
 
 *TopicPublisher.java*
 ```java
@@ -109,7 +109,7 @@ Now if you execute the `TopicPublisher.java` program it will successfully publis
 
 In order to receive a message from a topic a JMS *MessageConsumer* needs to be created.
 
-![]({{ site.baseurl }}/images/publish-subscribe-details-1.png)
+![]({{ site.baseurl }}/assets/images/publish-subscribe-details-1.png)
 
 *TopicSubscriber.java*
 ```java
