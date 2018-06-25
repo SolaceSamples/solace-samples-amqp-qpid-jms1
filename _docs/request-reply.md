@@ -38,8 +38,8 @@ The goal of this tutorial is to demonstrate how to use Apache Qpid JMS 1.1 over 
 1. How to build and send a request message
 2. How to receive a request message and respond to it
 
-{% include solaceMessaging.md %}
-{% include jmsApi.md %}
+{% include_relative assets/solaceMessaging.md %}
+{% include_relative assets/jmsApi.md %}
 
 ## Java Messaging Service (JMS) Introduction
 
@@ -76,7 +76,7 @@ At this point the application is connected to Solace messaging and ready to send
 
 In order to send a request in the *Requestor* a JMS *MessageProducer* needs to be created.
 
-![]({{ site.baseurl }}/images/request-reply-details-2.png)
+![]({{ site.baseurl }}/assets/images/request-reply-details-2.png)
 
 *BasicRequestor.java*
 ```java
@@ -103,7 +103,7 @@ The `JMSCorrelationID` property needs to have an unique value so the requestor t
 The figure below outlines the exchange of messages and the role of both properties.
 
 
-![]({{ site.baseurl }}/images/request-reply-details-1.png)
+![]({{ site.baseurl }}/assets/images/request-reply-details-1.png)
 
 
 *BasicRequestor.java*
@@ -149,7 +149,7 @@ requestConsumer.setMessageListener(new MessageListener() {
 
 To reply to a received request a JMS *MessageProducer* needs to be created in the *Replier*.
 
-![Request-Reply_diagram-3]({{ site.baseurl }}/images/request-reply-details-3.png)
+![Request-Reply_diagram-3]({{ site.baseurl }}/assets/images/request-reply-details-3.png)
 
 The JMS *MessageProducer* is created without its target queue as it will be assigned from the `JMSReplyTo` property value of the received request.
 

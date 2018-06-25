@@ -40,8 +40,8 @@ The goal of this tutorial is to demonstrate how to use Apache Qpid JMS 1.1 over 
 1.  How to send a persistent message to a durable queue with Solace messaging
 2.  How to bind to this queue and receive a persistent message
 
-{% include solaceMessaging.md %}
-{% include jmsApi.md %}
+{% include_relative assets/solaceMessaging.md %}
+{% include_relative assets/jmsApi.md %}
 
 ## Java Messaging Service (JMS) Introduction
 
@@ -91,7 +91,7 @@ At this point the application is connected to Solace messaging and ready to send
 
 In order to send a message to a queue a JMS *MessageProducer* needs to be created.
 
-![sending-message-to-queue]({{ site.baseurl }}/images/persistence-with-queues-details-2.png)
+![sending-message-to-queue]({{ site.baseurl }}/assets/images/persistence-with-queues-details-2.png)
 
 There is no difference in the actual method calls to the JMS `MessageProducer` when sending a JMS `persistent` message as compared to a JMS `non-persistent` message shown in the [publish/subscribe tutorial]({{ site.baseurl }}/publish-subscribe){:target="_blank"}. The difference in the JMS `persistent` message is that Solace messaging will acknowledge the message once it is successfully stored by Solace messaging and the `MessageProducer.send()` call will not return until it has successfully received this acknowledgement. This means that in JMS, all calls to the `MessageProducer.send()` are blocking calls and they wait for message confirmation from Solace messaging before proceeding. This is outlined in the JMS 1.1 specification and Solace JMS adheres to this requirement.
 
@@ -121,7 +121,7 @@ messageProducer.send(queue, message, DeliveryMode.PERSISTENT, Message.DEFAULT_PR
 
 In order to receive a persistent message from a queue a JMS *MessageConsumer* needs to be created.
 
-![]({{ site.baseurl }}/images/persistence-with-queues-details-1.png)
+![]({{ site.baseurl }}/assets/images/persistence-with-queues-details-1.png)
 
 The name of the queue is the same as the one to which we send messages.
 
