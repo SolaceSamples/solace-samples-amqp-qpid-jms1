@@ -33,6 +33,10 @@ dependencies {
     implementation 'org.slf4j:slf4j-simple:1.7.36'
 }
 
+tasks.withType(JavaCompile).all {
+    options.compilerArgs.add("-Xlint:all")
+}
+
 def scripts = [ 'topicPublisher':'com.solace.samples.TopicPublisher',
                 'topicSubscriber':'com.solace.samples.TopicSubscriber',
                 'queueProducer':'com.solace.samples.QueueProducer',
