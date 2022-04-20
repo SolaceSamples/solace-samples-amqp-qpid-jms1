@@ -14,15 +14,12 @@ run.enabled = false
 distTar.enabled=false
 distZip.enabled=false
 
-applicationName = 'solace-samples-amqp-qpid-jms1'
-version = ''
-
 jar {
-    baseName = 'solace-samples-amqp-qpid-jms1'
-    version =  version
+    archiveBaseName = 'solace-samples-amqp-qpid-jms1'
+    archiveVersion =  '1.1.0'
     manifest {
         attributes 'Implementation-Title': 'Solace Getting Started Samples',
-                   'Implementation-Version': version
+                   'Implementation-Version': '1.1.0'
     }
 }
 
@@ -31,13 +28,11 @@ repositories {
 }
 
 dependencies {
-    compile("org.apache.qpid:qpid-jms-client:0.27.0")
+    implementation "org.apache.qpid:qpid-jms-client:0.27.0"
+    implementation 'org.slf4j:slf4j-api:1.7.36'
+    implementation 'org.slf4j:slf4j-simple:1.7.36'
 }
 
-task createAllStartScripts() << {
-     // just a placeholder
-}
-  
 def scripts = [ 'topicPublisher':'com.solace.samples.TopicPublisher',
                 'topicSubscriber':'com.solace.samples.TopicSubscriber',
                 'queueProducer':'com.solace.samples.QueueProducer',
@@ -48,17 +43,17 @@ def scripts = [ 'topicPublisher':'com.solace.samples.TopicPublisher',
 
 scripts.each() { scriptName, className ->
           def t = tasks.create(name: scriptName+'StartScript', type: CreateStartScripts) {
-        mainClassName = className
+        mainClass = className
         applicationName = scriptName
         outputDir = new File(project.buildDir, 'scripts')
-        classpath = jar.outputs.files + project.configurations.runtime
+        classpath = jar.outputs.files + project.configurations.runtimeClasspath
     }
     applicationDistribution.into("bin") {
         from(t)
         fileMode = 0755
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     }
-    createAllStartScripts.dependsOn(t)
+    //createAllStartScripts.dependsOn(t)
 }
 
 installDist {
