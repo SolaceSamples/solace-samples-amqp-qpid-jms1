@@ -28,7 +28,7 @@ repositories {
 }
 
 dependencies {
-    implementation "org.apache.qpid:qpid-jms-client:0.27.0"
+    implementation "org.apache.qpid:qpid-jms-client:1.6.0"
     implementation 'org.slf4j:slf4j-api:1.7.36'
     implementation 'org.slf4j:slf4j-simple:1.7.36'
 }
